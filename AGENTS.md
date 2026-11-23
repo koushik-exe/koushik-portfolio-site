@@ -20,6 +20,8 @@ ALL content comes from PROFILE.md. Read it before writing any copy. Never invent
 Visual design (colors, fonts, layout, spacing) is decided by the design skills, not hard-coded here.
 Never hard-code colors in components. Use theme tokens defined in src/app/globals.css.
 
+Design system (tokens, type, spacing, radius, motion): see DESIGN.md. It is the source of truth for all later phases.
+
 ## Tech stack (do not add or swap libraries without asking)
 - Next.js App Router + TypeScript (src/ directory, alias @/*)
 - Tailwind CSS + shadcn/ui (Radix, Nova preset) + lucide-react + next-themes
