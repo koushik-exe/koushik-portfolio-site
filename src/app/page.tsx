@@ -1,14 +1,25 @@
-import { siteConfig } from "@/lib/site";
+import type { Metadata } from "next";
+
+import { ClosingCta } from "@/components/home/closing-cta";
+import { ExperienceSnapshot } from "@/components/home/experience-snapshot";
+import { FeaturedProjects } from "@/components/home/featured-projects";
+import { HomeHero } from "@/components/home/home-hero";
+import { SkillsOverview } from "@/components/home/skills-overview";
+
+export const metadata: Metadata = {
+  title: "Data Analyst | SQL, Excel & Python",
+  description:
+    "Entry-level data analyst with an MBA in Business Analytics, using SQL, Python and Excel to turn raw data into business insight.",
+};
 
 export default function Home() {
   return (
-    <section className="mx-auto flex w-full max-w-content flex-1 flex-col justify-center px-5 py-24 sm:px-8 sm:py-32 lg:px-12 lg:py-40">
-      <h1 className="max-w-4xl font-heading text-5xl leading-[1.05] font-semibold tracking-[-0.02em] text-balance text-foreground sm:text-6xl lg:text-7xl">
-        {siteConfig.name}
-      </h1>
-      <p className="mt-6 max-w-2xl text-lg leading-relaxed text-balance text-muted-foreground sm:text-xl">
-        {siteConfig.title}
-      </p>
-    </section>
+    <>
+      <HomeHero />
+      <FeaturedProjects />
+      <SkillsOverview />
+      <ExperienceSnapshot />
+      <ClosingCta />
+    </>
   );
 }

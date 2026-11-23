@@ -125,6 +125,19 @@ body copy. Serif is for headings, not for long body text.
 - **Images:** full-bleed inside their column, 1px border, no rounded corners larger than
   6px, no decorative frames.
 
+### Page composition
+
+- **Margin spine:** a 12-column grid with a 3-column margin for metadata (section numbers,
+  dates, row labels) and 8 columns of content starting at column 5. Every section on a long
+  page uses the same spine, so headings, copy and lists line up down the page.
+- **Section openers:** `01 / Selected work` in the margin, heading and intro on the right.
+  Rules run the full container width; a table or list inside the content column starts its
+  own inset rule.
+- **Cover band:** the home hero closes with a three-cell ledger (Based in / Open to relocate /
+  Languages) divided by hairlines.
+- **Contents index:** numbered anchor links to the page sections, in the hero's right margin
+  on desktop and a two-column row on mobile. Every target carries `scroll-mt-24`.
+
 ## 5. Motion
 
 - **Durations:** 150ms hover/press, 200ms color/border, 250–300ms entrance.
