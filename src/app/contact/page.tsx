@@ -1,9 +1,20 @@
 import type { Metadata } from "next";
 
+import { ArrowUpRight } from "lucide-react";
+
+import { ContactForm } from "@/components/contact/contact-form";
+import { siteConfig } from "@/lib/site";
+
 export const metadata: Metadata = {
   title: "Contact | Koushik C",
-  description: "Contact Koushik C — the contact form is coming soon.",
+  description:
+    "Contact Koushik C through the validated form. I’m based in Karur, Tamil Nadu and open to relocating to Chennai, Bengaluru or Coimbatore.",
 };
+
+const socials = [
+  { label: "GitHub", href: siteConfig.social.github },
+  { label: "LinkedIn", href: siteConfig.social.linkedin },
+];
 
 export default function Contact() {
   return (
@@ -25,8 +36,31 @@ export default function Contact() {
               Contact
             </h1>
             <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-pretty text-muted-foreground">
-              The contact form is coming soon.
+              You can send a message through this form. I’m based in Karur,
+              Tamil Nadu, and I’m open to relocating to Chennai, Bengaluru or
+              Coimbatore.
             </p>
+            <ContactForm />
+          </div>
+          <div className="lg:col-span-3">
+            <p className="font-mono text-[0.6875rem] tracking-[0.16em] text-muted-foreground uppercase lg:pt-2">
+              Find me on
+            </p>
+            <ul className="mt-4 flex flex-col gap-3">
+              {socials.map(({ label, href }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-base text-foreground underline-offset-4 hover:underline"
+                  >
+                    {label}
+                    <ArrowUpRight aria-hidden="true" className="size-4" />
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

@@ -31,6 +31,8 @@
   --color-link: var(--link);
   --color-overlay: var(--overlay);
   --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -95,6 +97,10 @@
   --ochre-300: #f5c97b;
   --violet-300: #c4b5fd;
   --gray-400: #94a3b8;
+
+  /* Primitives: status tokens (added in Phase 5) */
+  --success: var(--teal-700);
+  --warning: var(--ochre-700);
 
   /* Semantic tokens: light */
   --background: var(--paper-50);
@@ -172,6 +178,8 @@
   --sidebar-accent-foreground: var(--slate-100);
   --sidebar-border: var(--night-500);
   --sidebar-ring: var(--blue-200);
+  --success: var(--teal-300);
+  --warning: var(--ochre-300);
   color-scheme: dark;
 }
 

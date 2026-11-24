@@ -45,10 +45,9 @@ export function HomeHero() {
 
             <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-pretty text-muted-foreground sm:text-lg">
               I’m a Junior Analyst at ObjectWays in Karur, working with AI
-              training data. I have an MBA in Business Analytics and use SQL,
-              Python and Excel to clean data, answer business questions and
-              explain what the numbers mean &mdash; and I build small automations
-              that make that work repeatable.
+              training data. I also have an MBA in Business Analytics and work
+              in SQL, Python and Excel. In my own projects, I build small
+              automations in Python and n8n.
             </p>
 
             <div className="mt-12 flex flex-wrap items-center gap-3">

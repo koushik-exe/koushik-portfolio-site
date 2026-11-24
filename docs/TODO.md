@@ -1,4 +1,43 @@
-# Phase 4 — Projects index and project detail pages
+# Phase 5 — Contact page, form, Server Action, email, spam protection
+
+Source: `AGENTS.md`, `PROFILE.md`, `DESIGN.md` 2.3, 14, 12.2, 8.2, 10.2, 11; `docs/STATUS.md`.
+No database yet (Phase 6). No new packages. Do not modify other pages. Do not commit.
+No todo tool is available, so this file is the tracker.
+
+Current item: 1.4
+
+## Step 1 — Copy and plan only (stop for approval)
+
+- [x] 1.1 Revised `/contact` copy per Koushik's changes: intro (max 3 sentences) = "You can send a message through this form. I’m based in Karur, Tamil Nadu, and I’m open to relocating to Chennai, Bengaluru or Coimbatore." Privacy note: "Your message is used only to reply." No employer, email or phone on this page.
+- [x] 1.2 Newline rejection applies to name, email and subject only; the message field allows line breaks.
+- [x] 1.3 Honeypot-filled → normal success result; nothing sent and the rate limiter is not touched.
+- [x] 1.4 Rate-limit IP: first comma-separated value of `x-forwarded-for`, trimmed, then `x-real-ip`, then a fixed fallback.
+- [x] 1.5 Add `autocomplete="name"` to the name field and `autocomplete="email"` to the email field.
+- [x] 1.6 `CONTACT_FROM`: Resend default test sender. Delivery target is `CONTACT_EMAIL`. STATUS.md will document that a verified domain is required before sending to anyone else. No domain asked now.
+- [x] 1.7 (earlier) Checked the current Resend docs: the default test sender uses the `resend.dev` domain, which "can only send to the email address associated with your Resend account" (403 if you try to send elsewhere).
+- [x] 1.8 Home audit: hero pitch replaced in `src/components/home/home-hero.tsx` with the approved text; skills stated separately from the role.
+
+## Step 2 — Build (Phase 5)
+
+Current item: 3.4 (report follows)
+
+- [x] 2.1 Add `--success` and `--warning` tokens to `globals.css` and DESIGN 2.3, with measured contrast in both themes. (Measured: success/background 5.12 light / 12.87 dark; warning/background 4.71 light / 12.26 dark — all pass. Verified with the WCAG relative luminance formula.)
+- [x] 2.2 `src/lib/schemas/contact.ts`: one Zod schema shared by client and server. Name 1–100, valid email, message 10–2000, optional subject up to 120, a honeypot field that must be empty. Trim input; reject newlines in name, email and subject (header injection).
+- [x] 2.3 Vitest setup: `vitest.config.ts`, a "test" script, and tests for the schema (valid, bad email, too short, too long, newline injection, honeypot filled). Pure logic only.
+- [x] 2.4 Server Action: validate again on the server; rate limit with Upstash (5 per 10 minutes per IP using the forwarded IP header, with an in-memory fallback in development only); send with Resend to `CONTACT_EMAIL` with reply-to set to the visitor and a plain-text body. Return typed results and never expose internal errors. In production, missing env values fail safely with a generic message and a server log that contains no secrets.
+- [x] 2.5 Form UI per DESIGN 14: labels above fields, 44px inputs, errors linked with `aria-describedby` and announced in a live region, focus moves to the first invalid field, a sending state, a success state that replaces the form, and a failure state that keeps the typed text. The honeypot is hidden from people and assistive technology.
+- [x] 2.6 `/contact` page with unique metadata. Show GitHub and LinkedIn links only.
+
+## Step 3 — Handoff
+
+- [x] 3.1 Update `docs/STATUS.md` (under 60 lines).
+- [x] 3.2 Add differences to DESIGN.md section 21.
+- [x] 3.3 Run `npx tsc --noEmit`, `npm run lint`, `npm run build`; fix all errors.
+- [x] 3.4 Report files changed, test results, plain-words descriptions at 375px and 1280px, and a manual test checklist. Do not commit.
+
+## Completed
+
+### Phase 4 — Projects index and project detail pages
 
 Source: `AGENTS.md`, `PROFILE.md`, `DESIGN.md` 7.1, 7.8, 9.6, 15.1, 15.2, 18.1, 21 and
 `docs/STATUS.md`. Static, local data, no animation. One item at a time; run
@@ -7,7 +46,7 @@ tracker. Do not commit.
 
 Current item: 3.2 (in progress)
 
-## Step 1 — Data and copy only (stop for approval)
+#### Step 1 — Data and copy only (stop for approval)
 
 - [x] 1.1 Define the copy fields for all three projects (summary, problem, approach, tools, result, what I learned, links); no files changed except this tracker.
 - [x] 1.2 Write FileFlow copy using only `PROFILE.md`; mark unknown facts `null`.
@@ -18,7 +57,7 @@ Current item: 3.2 (in progress)
 - [x] 1.7 Show the data and questions, then stop. Write no code until the reply is exactly `approved`.
 - [x] 1.8 Apply the approval changes, show the revised data, stop.
 
-## Step 2 — Build (only after `approved`)
+#### Step 2 — Build (only after `approved`)
 
 - [x] 2.1 Extend the type and data in `src/lib/projects.ts` with the approved copy; keep the three home-page slugs working.
 - [x] 2.2 Build the `/projects` page header (DESIGN 7.1) and the approved intro.
@@ -31,14 +70,12 @@ Current item: 3.2 (in progress)
 - [x] 2.9 Check `/projects` and one detail page at 375px and 1280px, both themes, keyboard focus and reduced motion.
 - [x] 2.10 Run `npx tsc --noEmit`, `npm run lint`, `npm run build` and fix all errors.
 
-## Step 3 — Handoff
+#### Step 3 — Handoff
 
 - [x] 3.1 Update `docs/STATUS.md` to under 60 lines.
 - [x] 3.2 Record any code/DESIGN difference in `DESIGN.md` section 21.
 - [x] 3.3 Re-run `npx tsc --noEmit`, `npm run lint`, `npm run build` after documentation edits.
 - [x] 3.4 Report files changed and plain-words 375px/1280px descriptions, then stop. Do not commit.
-
-## Completed
 
 ### Phase 3 — About and Experience
 
@@ -75,7 +112,8 @@ Current item: 1.4
 #### Phase 2.5 — cleanup checklist
 
 Source: the Phase 2 review report (sections 4 and 5). Work one item at a time; run
-`npx tsc --noEmit` before ticking an item. Do not commit.
+`npx tsc --noEmit` before ticking an item. Do not commit. No todo tool is available, so this
+file is the tracker.
 
 ##### Code fixes
 
@@ -108,3 +146,8 @@ Source: the Phase 2 review report (sections 4 and 5). Work one item at a time; r
 - [x] Run `npx tsc --noEmit`, `npm run lint`, `npm run build`.
 - [x] Update `docs/STATUS.md`.
 - [x] Report files changed and plain-words 375px / 1280px differences.
+
+
+
+
+

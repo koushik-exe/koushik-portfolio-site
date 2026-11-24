@@ -32,11 +32,10 @@ export default function About() {
             <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-pretty text-muted-foreground">
               Junior Analyst at ObjectWays in Karur, working on AI data
               annotation and quality for egocentric image and video and NLP text
-              projects. MBA graduate specializing in Business Analytics, skilled
-              in SQL, Python and Microsoft Excel for turning raw data into
-              business insights. Self-driven in building Python automation
-              projects, with strong stakeholder communication built in a
-              customer-facing corporate role.
+              projects. MBA graduate specializing in Business Analytics,
+              skilled in SQL, Python and Microsoft Excel. Self-driven in
+              building Python automation projects, with strong stakeholder
+              communication built in a customer-facing corporate role.
             </p>
           </div>
         </header>

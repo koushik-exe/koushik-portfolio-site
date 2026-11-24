@@ -9,7 +9,7 @@ import { SkillsOverview } from "@/components/home/skills-overview";
 export const metadata: Metadata = {
   title: "Data Analyst | SQL, Excel & Python",
   description:
-    "Junior Analyst at ObjectWays with an MBA in Business Analytics, using SQL, Python and Excel to turn raw data into business insight.",
+    "Junior Analyst with an MBA in Business Analytics. I use SQL, Python and Excel to turn raw data into business insight.",
 };
 
 export default function Home() {

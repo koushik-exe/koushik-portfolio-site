@@ -199,10 +199,11 @@ Tailwind utilities such as `bg-background`, `text-muted-foreground`, `border-bor
 | `--chart-4` | `#C4B5FD` | data series 4 |
 | `--chart-5` | `#94A3B8` | data series 5 |
 
-### 2.3 Proposed status tokens (not yet in `globals.css`)
+### 2.3 Status tokens
 
-Forms in Phase 5 and the admin area in Phase 7 need success and warning colors. Add these as
-primitives and semantic tokens at the start of Phase 5, then remove the word "proposed" here.
+Added to `globals.css` in Phase 5: primitives `--success` and `--warning` in both themes plus
+the semantic tokens `--color-success` and `--color-warning`. Used by the `/contact` form and
+the admin area in Phase 7.
 
 | Token | Light | Dark | Used for |
 |---|---|---|---|
@@ -231,8 +232,8 @@ higher, large text 3:1 or higher, interface boundaries 3:1 or higher.
 | destructive on background | 6.29 | 6.83 | 4.5 | pass |
 | input border on background | 3.29 | 3.52 | 3.0 | pass |
 | ring on background | 6.41 | 9.96 | 3.0 | pass |
-| success on background (proposed) | 5.12 | 12.87 | 4.5 | pass |
-| warning on background (proposed) | 4.71 | 12.26 | 4.5 | pass |
+| success on background | 5.12 | 12.87 | 4.5 | pass |
+| warning on background | 4.71 | 12.26 | 4.5 | pass |
 | border on background | 1.26 | 1.32 | decorative | not for essential boundaries |
 
 Notes:
@@ -1295,7 +1296,7 @@ item by syncing the code and the file, then delete the row.
 | Contact CTA on `/contact` | decided | `aria-current="page"` only, no visual state change; the page heading carries the location |
 | Sticky Skills heading | decided | Allowed through CSS sticky, section 6.8 |
 | Inner page title size | new | 48px desktop and 36px mobile, section 3.2. Not built yet |
-| Status tokens | pending | Add `--success` and `--warning` to `globals.css` in Phase 5 |
+| Status tokens | added 2026-11-24 | `--success` / `--warning` in `globals.css` (primitives) plus `--color-success` / `--color-warning` in `@theme`; added in Phase 5. Measured vs background: success 5.12 light / 12.87 dark, warning 4.71 light / 12.26 dark - all pass |
 | Syntax highlight colors | pending | Verify contrast in both themes when code blocks are built |
 | Chart implementation | pending | Choose the approach in Phase 4, must read token colors |
 | Chart-4 in dark theme | pending (Phase 4) | ΔE 0.5 protanopia, 5.3 deuteranopia against chart-1 (Machado 2009, ΔE76). Candidate `#A78BFA` scores 23.4, 17.3, 13.1 against the other four. Replace before charts ship, then re-measure |
@@ -1312,7 +1313,8 @@ item by syncing the code and the file, then delete the row.
 | `theme-color` meta | pending | Phase 10, tokenised approach |
 | Focus to h1 after route change | pending | Phase 10 |
 | Prisma version mismatch | pending | Phase 6: installed `@prisma/client` 7.10.1 does not match the `prisma` CLI 8.0.0-rc.34; align before schema work |
-| Vitest setup | pending | Phase 5: no config or tests yet |
+| Vitest setup | added 2026-11-24 | `vitest.config.ts`, `vitest run` script, schema tests in `src/lib/schemas/contact.test.ts` (12 passing) |
+| Phase 5 — /contact | new | /contact + ContactForm (src/components/contact/contact-form.tsx): per 14, labels above fields, 44px inputs, errors via ria-describedby + live region, focus to first invalid field, sending/success/failure states; honeypot hidden from people and AT; CONTACT_FROM is Resend default test sender (verified domain required before sending to anyone else) |
 | Home action group (§8.5) | decided | Button scale rebuilt, single focus ring, hero action group + closing CTA applied, new §8.5 |
 
 ### 21.1 Recorded arbitrary values
