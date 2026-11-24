@@ -26,8 +26,8 @@ export function ExperienceSnapshot() {
         />
 
         <div className="mt-12 grid gap-x-8 gap-y-4 lg:grid-cols-12">
-          <p className="font-mono text-xs tracking-[0.14em] text-muted-foreground uppercase lg:col-span-3 lg:pt-1.5">
-            Aug 2025 &mdash; Jan 2026
+          <p className="font-mono text-sm tabular-nums tracking-[0.14em] text-muted-foreground uppercase lg:col-span-3 lg:pt-1.5">
+            Aug 2025 &ndash; Jan 2026
           </p>
 
           <div className="lg:col-span-8 lg:col-start-5">
@@ -39,15 +39,20 @@ export function ExperienceSnapshot() {
               (on-site)
             </p>
 
-            <ul className="mt-6 max-w-[62ch] list-disc space-y-3 border-t border-border pt-6 pl-5 text-base leading-relaxed text-muted-foreground marker:text-border">
+            <ul className="mt-6 max-w-[62ch] list-none space-y-3 border-t border-border pt-6 text-base leading-relaxed text-muted-foreground">
               {highlights.map((item) => (
-                <li key={item}>{item}</li>
+                <li
+                  key={item}
+                  className="relative pl-4 before:absolute before:top-[0.7em] before:left-0 before:h-px before:w-2 before:bg-muted-foreground before:content-['']"
+                >
+                  {item}
+                </li>
               ))}
             </ul>
 
             <Link
               href="/experience"
-              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-foreground transition-colors duration-200 outline-none hover:text-link focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-md text-sm font-medium text-foreground transition-colors duration-200 outline-none hover:text-link focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Full experience
               <ArrowUpRight aria-hidden="true" className="size-4" />

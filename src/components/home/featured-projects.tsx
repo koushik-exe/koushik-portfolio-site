@@ -26,13 +26,13 @@ export function FeaturedProjects() {
               <Link
                 href={`/projects/${project.slug}`}
                 aria-label={`View project: ${project.title}`}
-                className="group grid gap-x-8 gap-y-4 rounded-sm py-8 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background lg:grid-cols-12 lg:py-10"
+                className="group grid gap-x-8 gap-y-4 rounded-md py-8 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:grid-cols-12 lg:py-10"
               >
                 <div className="lg:col-span-3">
                   <span className="font-mono text-xs tabular-nums text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.14em] text-muted-foreground uppercase lg:flex-col lg:gap-y-1">
+                  <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-3 font-mono text-[0.6875rem] tracking-[0.14em] text-muted-foreground uppercase lg:flex-col">
                     {project.tools.map((tool) => (
                       <li key={tool}>{tool}</li>
                     ))}
@@ -64,7 +64,7 @@ export function FeaturedProjects() {
           <div className="lg:col-span-8 lg:col-start-5">
             <Link
               href="/projects"
-              className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-foreground transition-colors duration-200 outline-none hover:text-link focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm font-medium text-foreground transition-colors duration-200 outline-none hover:text-link focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               All projects
               <ArrowUpRight aria-hidden="true" className="size-4" />

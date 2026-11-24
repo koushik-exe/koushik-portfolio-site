@@ -64,7 +64,7 @@ export function HomeHero() {
             <a
               href="/Koushik_C_Resume.pdf"
               download
-              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-muted-foreground transition-colors duration-200 outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-md text-sm font-medium text-muted-foreground transition-colors duration-200 outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Download aria-hidden="true" className="size-4" />
               Download resume (PDF)
@@ -83,7 +83,7 @@ export function HomeHero() {
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="group flex min-h-11 items-center gap-2.5 rounded-sm text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:gap-3"
+                    className="group flex min-h-11 items-center gap-2.5 rounded-md text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:gap-3"
                   >
                     <span className="font-mono text-[0.6875rem] tabular-nums text-muted-foreground">
                       {item.index}

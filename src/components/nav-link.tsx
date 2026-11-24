@@ -17,7 +17,7 @@ export function NavLink({ href, label }: { href: string; label: string }) {
       href={href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "inline-flex h-11 items-center rounded-sm px-2 text-sm font-medium transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "inline-flex h-11 items-center rounded-md px-2 text-sm font-medium transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         isActive
           ? "text-foreground"
           : "text-muted-foreground hover:text-foreground"

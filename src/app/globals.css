@@ -38,6 +38,7 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
@@ -63,6 +64,7 @@
   --ink-900: #17191e;
   --ink-600: #565a63;
   --navy-900: #13213c;
+  --navy-800: #1b2e52;
   --blue-50: #e7ebf3;
   --blue-600: #1d4ed8;
   --blue-700: #163fa8;
@@ -79,6 +81,7 @@
   --night-500: #242a35;
   --night-400: #5f6b7c;
   --slate-300: #a3a9b5;
+  --slate-200: #d8dbe0;
   --slate-100: #ecedef;
   --blue-200: #9dbbff;
   --blue-100: #c2d4ff;
@@ -101,6 +104,7 @@
   --popover: var(--white);
   --popover-foreground: var(--ink-900);
   --primary: var(--navy-900);
+  --primary-hover: var(--navy-800);
   --primary-foreground: var(--paper-50);
   --secondary: var(--paper-200);
   --secondary-foreground: var(--ink-900);
@@ -140,6 +144,7 @@
   --popover: var(--night-900);
   --popover-foreground: var(--slate-100);
   --primary: var(--slate-100);
+  --primary-hover: var(--slate-200);
   --primary-foreground: var(--night-950);
   --secondary: var(--night-700);
   --secondary-foreground: var(--slate-100);

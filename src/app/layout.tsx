@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SmoothScroll>
             <a
               href="#main"
-              className="fixed top-4 left-4 z-[100] -translate-y-24 rounded-sm bg-background px-4 py-2 text-sm font-medium text-foreground ring-2 ring-ring ring-offset-2 ring-offset-background transition-transform duration-200 outline-none focus:translate-y-0"
+              className="fixed top-4 left-4 z-[100] -translate-y-24 rounded-md bg-background px-4 py-2 text-sm font-medium text-foreground ring-2 ring-ring ring-offset-2 ring-offset-background transition-transform duration-200 outline-none focus:translate-y-0"
             >
               Skip to content
             </a>

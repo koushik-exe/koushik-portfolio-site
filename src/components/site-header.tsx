@@ -11,9 +11,9 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 w-full max-w-content items-center gap-4 px-5 sm:px-8 lg:h-[4.5rem] lg:px-12">
         <Link
           href="/"
-          className="flex min-w-0 items-center gap-3 rounded-sm transition-opacity duration-200 outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="flex min-w-0 items-center gap-3 rounded-md text-foreground transition-colors duration-200 outline-none hover:text-link focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
-          <span className="font-heading text-xl font-semibold tracking-tight text-foreground">
+          <span className="font-heading text-xl font-semibold tracking-tight">
             {siteConfig.name}
           </span>
           <span aria-hidden="true" className="hidden h-4 w-px bg-border lg:block" />

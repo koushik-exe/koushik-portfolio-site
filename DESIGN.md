@@ -146,6 +146,7 @@ Tailwind utilities such as `bg-background`, `text-muted-foreground`, `border-bor
 | `--popover` | `#FFFFFF` | menus, sheets |
 | `--popover-foreground` | `#17191E` | text in overlays |
 | `--primary` | `#13213C` | solid buttons, strong brand surfaces |
+| `--primary-hover` | `#1B2E52` | solid button hover |
 | `--primary-foreground` | `#FAFAF7` | text on primary |
 | `--secondary` | `#EDECE6` | secondary buttons, quiet fills |
 | `--secondary-foreground` | `#17191E` | text on secondary |
@@ -177,6 +178,7 @@ Tailwind utilities such as `bg-background`, `text-muted-foreground`, `border-bor
 | `--popover` | `#12161E` | menus, sheets |
 | `--popover-foreground` | `#ECEDEF` | text in overlays |
 | `--primary` | `#ECEDEF` | solid buttons, strong brand surfaces |
+| `--primary-hover` | `#D8DBE0` | solid button hover |
 | `--primary-foreground` | `#0D1016` | text on primary |
 | `--secondary` | `#1A1F29` | secondary buttons, quiet fills |
 | `--secondary-foreground` | `#ECEDEF` | text on secondary |
@@ -223,6 +225,7 @@ higher, large text 3:1 or higher, interface boundaries 3:1 or higher.
 | link on background | 6.41 | 9.96 | 4.5 | pass |
 | link-hover on background | 8.69 | not measured | 4.5 | pass in light |
 | primary-foreground on primary | 15.32 | 16.26 | 4.5 | pass |
+| primary-foreground on primary-hover | 12.88 | 13.72 | 4.5 | pass |
 | foreground on secondary | 14.86 | not measured | 4.5 | pass in light |
 | accent-foreground on accent | 13.41 | not measured | 4.5 | pass in light |
 | destructive on background | 6.29 | 6.83 | 4.5 | pass |
@@ -333,19 +336,25 @@ Never use more than three families. Do not add a fourth for one special case.
 |---|---|---|---|---|---|---|
 | Display (home h1) | 72px | 48px | 600 | 1.05 | -0.02em | serif |
 | Page title (inner pages) | 48px | 36px | 600 | 1.1 | -0.02em | serif |
-| h2 | 40px | 32px | 600 | 1.15 | -0.015em | serif |
-| h3 | 24px | 20px | 600 | 1.3 | 0 | serif |
-| Lead paragraph | 20px | 18px | 400 | 1.6 | 0 | sans |
+| h2 | 36px | 30px | 600 | 1.15 | -0.015em | serif |
+| h3 | 30px | 24px | 600 | 1.3 | 0 | serif |
+| Hero role line (home) | 24px | 20px | 400 | 1.375 | 0 | sans |
+| Lead paragraph (inner pages) | 20px | 18px | 400 | 1.6 | 0 | sans |
 | Body | 18px | 16px | 400 | 1.65 | 0 | sans |
-| Body small | 16px | 15px | 400 | 1.6 | 0 | sans |
+| Body small | 16px | 16px | 400 | 1.6 | 0 | sans |
 | UI | 14px | 14px | 500 | 1.4 | 0 | sans |
-| Label | 11px | 11px | 500 | 1.3 | 0.16em | mono, uppercase |
+| Label | 11px | 11px | 500 | 1.3 | 0.14em | mono, uppercase |
 | Caption | 13px | 13px | 400 | 1.5 | 0 | sans |
 | Code inline | 0.9em | 0.9em | 400 | inherit | 0 | mono |
 | Code block | 14px | 13px | 400 | 1.6 | 0 | mono |
 
-Where the home page and this table disagree on a size, treat the home page code as the
-current truth and record the difference in section 21.
+Home page steps: h1 is 48px, then 60px at `sm`, then 72px at `lg`; h2 is 30px then 36px
+at `sm`; h3 is 24px then 30px at `sm`, except the experience snapshot h3 which stays 24px.
+The hero role line is 20px then 24px at `sm`. Body small is used for section intros,
+project summaries, skill values and experience body copy; the hero summary uses Body.
+Section openers, the header role label and the hero eyebrow use 0.16em tracking; other
+labels use 0.14em. Where the home page and this table disagree, the home page code is the
+current truth and the difference belongs in section 21.
 
 ### 3.3 Typography rules
 
@@ -356,7 +365,9 @@ current truth and record the difference in section 21.
    equivalent token. Leads may run slightly narrower.
 4. Do not fake bold, italic or small caps. Use real font weights and styles that were loaded.
 5. Use `text-balance` on headings and `text-pretty` on paragraphs.
-6. Labels are mono, uppercase and 11px. Never set a full sentence as a label.
+6. Labels are mono, uppercase and 11px, with 0.14em tracking unless they are section
+   openers, the header role label or the hero eyebrow, which use 0.16em. Never set a full
+   sentence as a label.
 7. Numbers in tables, metrics and dates use mono with `tabular-nums`.
 8. Do not use more than three weights on one page: 400, 500, 600.
 9. Do not use letter-spacing on body text. Tracking is only for display, headings and labels.
@@ -410,12 +421,11 @@ a layout genuinely needs one, and then record it in section 21.
 
 | Viewport | Vertical padding |
 |---|---|
-| under 1024px | 96px |
-| 1024px and up | 128px |
+| under 640px | 96px |
+| 640px and up | 128px |
 
 The home hero may use up to 144px above the copy. Inner pages use the table above. Every
-section opens with a full-width hairline. If the built home page uses different values, the
-code is the current truth, so note the difference in section 21 and sync one to the other.
+section opens with a full-width hairline. Record any later difference in section 21.
 
 ### 4.4 Vertical rhythm inside a section
 
@@ -435,8 +445,8 @@ code is the current truth, so note the difference in section 21 and sync one to 
 |---|---|---|
 | default | 0 | phone, single column |
 | `sm` | 640px | large phone, wider gutters |
-| `md` | 768px | tablet, 12-column grid starts, desktop nav appears |
-| `lg` | 1024px | laptop, larger gutters and section padding |
+| `md` | 768px | tablet, desktop nav appears |
+| `lg` | 1024px | laptop, 12-column grid starts, larger gutters and section padding |
 | `xl` | 1280px | desktop, container reaches 1200px |
 
 Test every page at 375px, 768px and 1280px. Also check 320px for overflow and 1920px for
@@ -455,9 +465,9 @@ runaway stretching.
 
 ### 5.2 Grid
 
-- 12 columns from `md`. Content blocks start and end on column lines.
-- Column gap 24px at `md`, 32px at `lg` and above.
-- Below `md`, everything is a single column in reading order.
+- 12 columns from `lg`. Content blocks start and end on column lines.
+- Column gap 32px at `lg` and above.
+- Below `lg`, everything is a single column in reading order.
 
 ### 5.3 Radius, borders, shadows
 
@@ -479,7 +489,7 @@ The page composition for long pages:
 - 8 columns of content starting at column 5. Column 4 is breathing room.
 - Every section on a long page uses the same spine, so headings, copy and lists line up
   down the page.
-- Below `md`, the margin content stacks above the content it describes.
+- Below `lg`, the margin content stacks above the content it describes.
 
 ### 5.5 Section opener
 
@@ -494,13 +504,14 @@ The page composition for long pages:
 ### 5.6 Cover band (home only)
 
 - The home hero closes with a three-cell ledger: Based in, Open to relocate, Languages.
-- Cells are divided by hairlines and share equal width on desktop.
-- Below `md`, the cells stack, each a mono label over a value.
+- Cells are divided by hairlines and share equal width from `sm`.
+- Below `sm`, the cells stack, each a mono label over a value.
 
 ### 5.7 Contents index (home only)
 
 - Numbered anchor links to the home sections, in the hero's right margin on desktop.
-- A two-column row on mobile.
+- A two-column row on mobile, four columns from `sm`, and one column in the hero's right
+  margin from `lg`.
 - It is one component. If it feels like clutter on review, remove it. Do not add it to any
   other page.
 
@@ -516,7 +527,7 @@ The page composition for long pages:
 
 | Template | Pages | Structure |
 |---|---|---|
-| Home | `/` | cover band, four numbered sections, closing section |
+| Home | `/` | cover band, three numbered content sections (01 Selected work, 02 Toolkit, 03 Experience), and a numbered closing contact section (04 Contact) |
 | Inner | `/about`, `/experience` | page header, sections on the spine |
 | Index | `/projects`, `/blog` | page header, filter bar, ruled list |
 | Detail | `/projects/[slug]`, `/blog/[slug]` | page header, meta row, article body, related |
@@ -620,12 +631,13 @@ JavaScript pinning, and it must not be combined with GSAP ScrollTrigger pinning.
   two thirds.
 - Hairline between rows.
 - Used for skills, personal facts and education details.
-- Below `md`, the label stacks above the value.
+- Below `sm`, the label stacks above the value.
 - Values that are lists use a comma-separated line, not bullets, unless there are more than six.
 
 ### 7.4 Tags
 
-- Plain mono 11px uppercase text, separated by 12px of space or a middle dot.
+- Plain mono 11px uppercase text, separated by 12px in either direction. Tags may stack
+  in the margin on desktop.
 - No filled chips, no pills, no borders.
 - Tags are never the only way to identify a tool. The project summary also names it.
 - On the Projects index, filter controls are a separate component, see section 7.8.
@@ -683,8 +695,7 @@ JavaScript pinning, and it must not be combined with GSAP ScrollTrigger pinning.
 - Label is a verb or verb phrase in sentence case: "View projects", "Send message".
 - Icon, if any, is 16px lucide, placed after the label for forward actions, before for
   download. Icon is `aria-hidden`.
-- Hover: background shifts one step (primary lightens or darkens by the token pair defined in
-  `globals.css`). 150ms.
+- Hover: background shifts to `--primary-hover` (light `#1B2E52`, dark `#D8DBE0`). 150ms.
 - Focus: 2px ring in `--ring` with 2px offset. Never removed.
 - Disabled: reduced contrast is allowed, but the label stays readable at 3:1 or better, and the
   reason is stated near the control when it is not obvious.
@@ -1229,17 +1240,41 @@ item by syncing the code and the file, then delete the row.
 
 | Item | Status | Note |
 |---|---|---|
-| Section padding values | check | Home page may use 128px at 1280px. Confirm it matches section 4.3 |
 | Header blur | decided | Kept as a sanctioned exception in section 12.1 |
 | Sticky Skills heading | decided | Allowed through CSS sticky, section 6.8 |
-| Tag style | decided | Plain mono text, section 7.4. Check home project rows match |
 | Inner page title size | new | 48px desktop and 36px mobile, section 3.2. Not built yet |
 | Status tokens | pending | Add `--success` and `--warning` to `globals.css` in Phase 5 |
 | Syntax highlight colors | pending | Verify contrast in both themes when code blocks are built |
 | Chart implementation | pending | Choose the approach in Phase 4, must read token colors |
-| Chart-4 in dark theme | pending | ΔE 0.5 protanopia, 5.3 deuteranopia against chart-1 (Machado 2009, ΔE76). Candidate `#A78BFA` scores 23.4, 17.3, 13.1 against the other four. Replace before charts ship, then re-measure |
-| Resume PDF in repository | check | Confirm the file is ignored by Git and reaches the deployed site separately |
+| Chart-4 in dark theme | pending (Phase 4) | ΔE 0.5 protanopia, 5.3 deuteranopia against chart-1 (Machado 2009, ΔE76). Candidate `#A78BFA` scores 23.4, 17.3, 13.1 against the other four. Replace before charts ship, then re-measure |
+| Resume PDF in repository | blocked | Ignored and untracked; a Git-based deploy will not include it. Needs a hosting decision |
 | `theme-color` meta | pending | Phase 10, tokenised approach |
+| Focus to h1 after route change | pending | Phase 10 |
+| Prisma version mismatch | pending | Phase 6: installed `@prisma/client` 7.10.1 does not match the `prisma` CLI 8.0.0-rc.34; align before schema work |
+| Vitest setup | pending | Phase 5: no config or tests yet |
+
+### 21.1 Recorded arbitrary values
+
+These are the non-scale values currently in the built components. They are approved by eye.
+Scale-aligned arbitrary values (`leading-[1.05]`, `leading-[1.15]`, `tracking-[-0.02em]`,
+`tracking-[-0.015em]`) are the type scale from 3.2, not exceptions.
+
+| Value | Where used |
+|---|---|
+| `text-[0.6875rem]` (11px) | mono labels and tags |
+| `tracking-[0.16em]` | section openers, header role label, hero eyebrow |
+| `tracking-[0.14em]` | facts ledger, skill labels, experience dates, project tags |
+| `max-w-[62ch]` | hero summary and experience bullets |
+| `lg:h-[4.5rem]` (72px) | header at desktop |
+| `data-[side=right]:w-[85%]` | mobile sheet width |
+| `z-[100]` | skip link |
+| `top-[0.7em]` | designed list bullet position |
+| `before:content-['']` | designed list bullet pseudo-element |
+| `duration-[250ms]` | sheet slide |
+| `text-[0.8rem]` | small button size |
+| `rounded-[min(var(--radius-md),10px)]` | xs and icon-xs button radius |
+| `rounded-[min(var(--radius-md),12px)]` | sm and icon-sm button radius |
+| `supports-[backdrop-filter]` | header background fallback |
 
 ---
 
@@ -1341,5 +1376,6 @@ and report the changed files and a plain-words description of the result.
 | 1.1 | 2026-11-23 | Added page composition rules for the home page redesign |
 | 2.0 | 2026-11-23 | Full rewrite: measured contrast, inner page patterns, data presentation, forms, case studies, blog, admin, states, SEO, voice, checklists, prompts |
 | 2.1 | 2026-11-23 | Added section 2.8 color rationale with sources and chart-safety method; logged the dark chart-4 issue |
+| 2.2 | 2026-11-24 | Synced the type scale, section padding, grid and ledger breakpoints, tag spacing and home structure to the built home page; added `--primary-hover`; logged the Phase 2.5 items in section 21 |
 
 End of file.

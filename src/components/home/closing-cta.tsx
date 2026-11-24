@@ -33,7 +33,7 @@ export function ClosingCta() {
             >
               <a href="/Koushik_C_Resume.pdf" download>
                 <Download aria-hidden="true" className="size-4" />
-                Download resume
+                Download resume (PDF)
               </a>
             </Button>
           </div>
