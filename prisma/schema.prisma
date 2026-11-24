@@ -1,0 +1,73 @@
+// This is your Prisma schema file, learn more about it: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Phase 6: contact messages. From src/lib/actions/contact.ts.
+model Message {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  subject   String?
+  read      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// Phase 6: projects. Reconciled with src/lib/projects.ts (status "Personal
+// project", type null for all three, result "No measured result yet.").
+model Project {
+  id         Int      @id @default(autoincrement())
+  slug       String   @unique
+  title      String
+  type       String?               // DESIGN 15.2 Type meta row; null in current data
+  status     String                // DESIGN 15.2 Status meta row
+  tools      String[]              // DESIGN 15.2 Tools meta row + body Tools section
+  summary    String                // DESIGN 15.2 Summary
+  problem    String?               // DESIGN 15.2 Problem — null when unknown
+  approach   String?               // DESIGN 15.2 Approach — null when unknown
+  result     String                // DESIGN 15.2 Result; "No measured result yet." when none
+  learned    String?               // DESIGN 15.2 "What I learned" — null when unknown
+  repository String?               // Links meta row (Repository)
+  live       String?               // Links meta row (Live)
+  published  Boolean  @default(true)
+  featured   Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// Phase 6: blog posts. DESIGN 16.4; publishedAt is the displayed date.
+model Post {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  title       String
+  description String    @db.VarChar(160) // DESIGN 16.4: description of at most 160 characters
+  publishedAt DateTime?                 // set when the post is published; null while a draft
+  tags        String[]                  // DESIGN 16.4: tags from the project vocabulary
+  source      String                    // the post's MDX source
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([published])
+  @@index([publishedAt])
+}
+
+// Phase 6: testimonials. consent + published (user revision).
+model Testimonial {
+  id        Int       @id @default(autoincrement())
+  quote     String
+  name      String
+  consent   Boolean   @default(false)
+  published Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
