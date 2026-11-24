@@ -5,7 +5,7 @@ ask which one is right before changing either. Change a value here and in
 `src/app/globals.css` together. Never introduce a one-off color, font, radius, spacing or
 motion value inside a component.
 
-Version: 2.1
+Version: 2.3
 Status: Phase 1 and Phase 2 built. Phases 3 to 10 follow these rules.
 Owner: Koushik C. Edit this file by hand in VS Code and save it as UTF-8.
 
@@ -407,6 +407,7 @@ a layout genuinely needs one, and then record it in section 21.
 | Token | px | Typical use |
 |---|---|---|
 | `space-1` | 4 | icon to text gap, tight inline gaps |
+| `space-1.5` | 6 | optical half-step: mono label to value, slash spacing |
 | `space-2` | 8 | label to value, small stacks |
 | `space-3` | 12 | list item gap, compact rows |
 | `space-4` | 16 | paragraph gap, form field gap |
@@ -445,8 +446,8 @@ section opens with a full-width hairline. Record any later difference in section
 |---|---|---|
 | default | 0 | phone, single column |
 | `sm` | 640px | large phone, wider gutters |
-| `md` | 768px | tablet, desktop nav appears |
-| `lg` | 1024px | laptop, 12-column grid starts, larger gutters and section padding |
+| `md` | 768px | tablet, wider gutters |
+| `lg` | 1024px | laptop, desktop nav appears, 12-column grid starts, larger gutters and section padding |
 | `xl` | 1280px | desktop, container reaches 1200px |
 
 Test every page at 375px, 768px and 1280px. Also check 320px for overflow and 1920px for
@@ -510,8 +511,9 @@ The page composition for long pages:
 ### 5.7 Contents index (home only)
 
 - Numbered anchor links to the home sections, in the hero's right margin on desktop.
-- A two-column row on mobile, four columns from `sm`, and one column in the hero's right
-  margin from `lg`.
+- Hidden below `lg`. The copy and actions lead straight to the first section on phones and
+  tablets, with no index block between them.
+- One column in the hero's right margin from `lg`.
 - It is one component. If it feels like clutter on review, remove it. Do not add it to any
   other page.
 
@@ -676,6 +678,19 @@ JavaScript pinning, and it must not be combined with GSAP ScrollTrigger pinning.
 - Never fill a gap with placeholder testimonials, fake logos or lorem ipsum.
 - The Testimonials page stays hidden, and out of navigation, until real ones exist.
 
+### 7.10 Skills inventory
+
+Used on the Skills section of the About page. There is no separate toolkit section elsewhere; Home shows the names only (`homeSkillGroups` in `src/lib/skills.ts`).
+
+Structure, following the spine of section 5.4:
+
+- Each category is one row of the 12-column grid: the category label is an h3 in the 3-column margin (serif, 24–30px, weight 600); the item rows live in the 8-column content column.
+- Each item is a ruled row of a `dl`: the item name uses the Education section's margin-label style — Inter Mono 11px, uppercase, 0.14em tracking, `text-muted-foreground` — matching a line like "MBA, Business Analytics"; it sits in the left column. When the item has a qualifier, the qualifier sits on the right (2/3) of the row, in the style of the Education institution line: Inter 16px, `leading-relaxed`, `text-foreground`, for example "Rathinam Global University, Coimbatore, 2023–2025. CGPA 7.64." and "scripting, automation, file handling".
+- Rows are separated by a 1px `--border` hairline; rows carry 24px vertical padding (section 4.4).
+- Category order: Databases and querying, Programming, Data and spreadsheets, Analytics and automation (the analyst stack first), then Tools, Soft skills, Languages.
+- Below `lg` the h3s stack above their rows.
+- Never used here: stars, percentages, bars, grouped tags, or a flat comma list (the thing this section replaces).
+
 ---
 
 ## 8. Buttons and links
@@ -699,7 +714,7 @@ JavaScript pinning, and it must not be combined with GSAP ScrollTrigger pinning.
 - Focus: 2px ring in `--ring` with 2px offset. Never removed.
 - Disabled: reduced contrast is allowed, but the label stays readable at 3:1 or better, and the
   reason is stated near the control when it is not obvious.
-- Pressed: no scale or bounce effect.
+- Pressed: no scale or bounce; a 1px settle, `translate-y-px`, 150ms.
 - Loading: label changes to a verb ending in "ing" and the button is disabled. No spinner on
   its own without text.
 - Buttons that navigate are links styled as buttons, using the `a` element. Buttons that act
@@ -723,6 +738,21 @@ JavaScript pinning, and it must not be combined with GSAP ScrollTrigger pinning.
 - Do not link entire sentences in running text.
 - Do not use a bare URL as link text unless the URL itself is the content.
 
+### 8.5 Action group (home hero CTAs)
+
+The home hero carries its actions as one aligned action group rather than separate controls.
+
+- One wrapped row, everything vertically centered on the 44px baseline of section 8.2. Gap 12px.
+- Forward actions carry a 16px trailing icon (`ArrowRight`), `aria-hidden`, nudging 2px right
+  in 150ms on hover.
+- A quiet tertiary action (resume download) sits in the same row after a 1px × 24px `--border`
+  hairline at `sm` and up. Below `sm` the divider is hidden and the action wraps onto its own
+  line, left aligned.
+- Hover on the tertiary: muted → foreground and a 1px underline.
+- No full-width slabs and no stacked groups; every target stays at 44px height.
+- The single 2px `--ring` focus ring comes from the global `:focus-visible` rule in
+  `src/app/globals.css`; it appears once on every button, link and action.
+
 ---
 
 ## 9. Navigation pieces
@@ -732,27 +762,38 @@ JavaScript pinning, and it must not be combined with GSAP ScrollTrigger pinning.
 - 14px, weight 500, Inter. Muted by default, foreground on hover and when current.
 - The current item has a 1px foreground underline inset from the text edges and carries
   `aria-current="page"`.
+- Hover and keyboard focus show the same underline at 40% opacity, so the link confirms it is
+  interactive before it is clicked.
 - 44px hit height.
 
 ### 9.2 Navigation items
 
-Home, About, Projects, Blog, Experience, Contact. Testimonials and Admin are not in the nav.
-Admin is reachable by direct address only. Items for pages not yet built may 404 during
-development, but no site is deployed publicly until every nav target exists.
+Home, About, Projects, Blog, Experience. Contact is not a row: it is the header's single
+primary action (a solid button) and the mobile sheet's full-width button, so the same
+destination never appears twice. Testimonials and Admin are not in the nav. Admin is
+reachable by direct address only. Items for pages not yet built may 404 during development,
+but no site is deployed publicly until every nav target exists.
 
 ### 9.3 Theme toggle
 
 - Icon-only ghost button: 44px through tablet, 36px at desktop width.
 - Accessible label describes the action: "Switch to dark theme" or "Switch to light theme".
 - Moon and sun icons are swapped with CSS classes so there is no icon flash on load.
-- The toggle is the last item in the desktop row and the first control in the mobile bar.
+- The toggle follows the availability line and precedes the primary action on desktop. It is
+  the first control in the mobile bar.
 
 ### 9.4 Mobile menu
 
-- shadcn Sheet from the right, 85% width, maximum 320px.
-- Serif title ("Navigation"), hairline under it, then 48px rows separated by hairlines.
+- shadcn Sheet from the right, 85% width, maximum 320px. The row list scrolls; the footer stays
+  at the bottom edge.
+- Header: serif site name, mono role label below it, and a hairline. The close button is 44px
+  and is the first focus stop, matching its position at the top right.
+- Five rows, 56px high, separated by hairlines. Each row carries a decorative mono index
+  (`01` to `05`), the label, and a 16px arrow that nudges 1px on hover.
+- Footer: availability line, location and relocation line, a full-width Contact button, and
+  GitHub and LinkedIn text links with 44px hit height.
 - Focus is trapped inside while open. Escape closes. Focus returns to the menu button after
-  closing.
+  closing. Choosing a row or the Contact button closes the sheet.
 - The current page is underlined, as on desktop.
 - The overlay uses the `--overlay` token. This is the only place a shadow is allowed besides
   popovers.
@@ -896,9 +937,19 @@ Target: WCAG 2.2 level AA on every page, in both themes.
 - Background: the page paper at about 80% opacity with a light backdrop blur, so content
   scrolls under it without a hard edge. This is the single sanctioned exception to the
   glassmorphism ban. It has no tint, no gradient and no shadow.
-- Contents: wordmark on the left (serif, about 21px), a 1px vertical divider and a mono label
-  "Data Analyst" at desktop width, navigation on the right, then the theme toggle.
-- Below `md`: wordmark, theme toggle and menu button only.
+- Contents, left to right: the wordmark (serif, about 20px) with a 1px vertical divider and the
+  mono role label at `md`; the navigation pushed to the right; a 1px vertical divider; a mono
+  availability line marked by a 4px `--link` square at `xl`; the theme toggle; and the Contact
+  primary action at `lg`.
+- The availability line is text as well as a square. Colour never carries the meaning alone.
+- The Contact action is a link styled as a button (44px, section 8.2), not a sixth navigation
+  row. It carries `aria-current="page"` on `/contact` and keeps its normal fill; the page
+  heading supplies the visual location.
+- Density ladder: under `md` the bar shows the wordmark, theme toggle and menu button only.
+  The role label appears at `md`; navigation, the divider and the Contact action at `lg`; and
+  the availability line at `xl`. At 768px the sheet carries navigation and Contact, because
+  five links plus the action do not fit without crowding. Nothing may overflow at 1024px; if
+  it does, hide the role label before hiding the action.
 - If the blur ever causes legibility or performance problems, replace it with a solid
   `--background` fill. Do not make the header more transparent.
 
@@ -1241,6 +1292,7 @@ item by syncing the code and the file, then delete the row.
 | Item | Status | Note |
 |---|---|---|
 | Header blur | decided | Kept as a sanctioned exception in section 12.1 |
+| Contact CTA on `/contact` | decided | `aria-current="page"` only, no visual state change; the page heading carries the location |
 | Sticky Skills heading | decided | Allowed through CSS sticky, section 6.8 |
 | Inner page title size | new | 48px desktop and 36px mobile, section 3.2. Not built yet |
 | Status tokens | pending | Add `--success` and `--warning` to `globals.css` in Phase 5 |
@@ -1248,10 +1300,20 @@ item by syncing the code and the file, then delete the row.
 | Chart implementation | pending | Choose the approach in Phase 4, must read token colors |
 | Chart-4 in dark theme | pending (Phase 4) | ΔE 0.5 protanopia, 5.3 deuteranopia against chart-1 (Machado 2009, ΔE76). Candidate `#A78BFA` scores 23.4, 17.3, 13.1 against the other four. Replace before charts ship, then re-measure |
 | Resume PDF in repository | blocked | Ignored and untracked; a Git-based deploy will not include it. Needs a hosting decision |
+| Contents index below `lg` | decided | Hidden under 1024px, section 5.7 updated |
+| Home project rows | decided | Static rows until Phase 4 adds `/projects/[slug]`; the section footer links to GitHub |
+| Phase 4 — `/projects` | new | Page header (7.1), then filter bar (7.8), then ruled rows (15.1) with index, tool tags and arrow action. Filter bar renders only when 6+ projects; the count label reads `N projects`; all rows are in the HTML and hidden client-side on filter; no animation |
+| Phase 4 — `/projects/[slug]` | new | Breadcrumb (9.6), meta row (Type, Tools, Status, Links), sections in 15.2 order; null sections omitted except Result |
+| Phase 4 — project data | decided | `src/lib/projects.ts` owns data and copy; fields can be `null` until filled; results read "No measured result yet." until real |
+| Phase 4 — 404 | new | Custom `src/app/not-found.tsx` per 18.1 |
+| Phase 4 — links on project pages | decided | External links (e.g. dev site live link) use `ArrowUpRight` 16px + `rel="noopener noreferrer"` |
+| Blog nav item | pending | Hidden from `site.ts` until Phase 8 builds `/blog` |
+| Experience and education data | decided | Single source in `src/lib/profile.ts`; `src/lib/timeline.ts` removed |
 | `theme-color` meta | pending | Phase 10, tokenised approach |
 | Focus to h1 after route change | pending | Phase 10 |
 | Prisma version mismatch | pending | Phase 6: installed `@prisma/client` 7.10.1 does not match the `prisma` CLI 8.0.0-rc.34; align before schema work |
 | Vitest setup | pending | Phase 5: no config or tests yet |
+| Home action group (§8.5) | decided | Button scale rebuilt, single focus ring, hero action group + closing CTA applied, new §8.5 |
 
 ### 21.1 Recorded arbitrary values
 
@@ -1264,7 +1326,7 @@ Scale-aligned arbitrary values (`leading-[1.05]`, `leading-[1.15]`, `tracking-[-
 | `text-[0.6875rem]` (11px) | mono labels and tags |
 | `tracking-[0.16em]` | section openers, header role label, hero eyebrow |
 | `tracking-[0.14em]` | facts ledger, skill labels, experience dates, project tags |
-| `max-w-[62ch]` | hero summary and experience bullets |
+| `max-w-[62ch]` | hero summary, section intros, project summaries, experience bullets |
 | `lg:h-[4.5rem]` (72px) | header at desktop |
 | `data-[side=right]:w-[85%]` | mobile sheet width |
 | `z-[100]` | skip link |
@@ -1272,6 +1334,7 @@ Scale-aligned arbitrary values (`leading-[1.05]`, `leading-[1.15]`, `tracking-[-
 | `before:content-['']` | designed list bullet pseudo-element |
 | `duration-[250ms]` | sheet slide |
 | `text-[0.8rem]` | small button size |
+| `text-[0.8125rem]` (13px) | mobile sheet location line |
 | `rounded-[min(var(--radius-md),10px)]` | xs and icon-xs button radius |
 | `rounded-[min(var(--radius-md),12px)]` | sm and icon-sm button radius |
 | `supports-[backdrop-filter]` | header background fallback |
@@ -1296,7 +1359,7 @@ Scale-aligned arbitrary values (`leading-[1.05]`, `leading-[1.15]`, `tracking-[-
 ### 22.2 Phase 3 (About, Experience)
 
 - [ ] Page header pattern (7.1) on both pages
-- [ ] Timeline pattern (7.2) with BBA, HDCA, MBA and the Business Associate role
+- [ ] Timeline pattern (7.2) with MBA, BBA, HDCA and both roles (ObjectWays, Altruist)
 - [ ] Key-value rows (7.3) for skills, languages and location
 - [ ] Resume download as a tertiary action with the file type named
 - [ ] No testimonials page, no invented backstory
@@ -1377,5 +1440,7 @@ and report the changed files and a plain-words description of the result.
 | 2.0 | 2026-11-23 | Full rewrite: measured contrast, inner page patterns, data presentation, forms, case studies, blog, admin, states, SEO, voice, checklists, prompts |
 | 2.1 | 2026-11-23 | Added section 2.8 color rationale with sources and chart-safety method; logged the dark chart-4 issue |
 | 2.2 | 2026-11-24 | Synced the type scale, section padding, grid and ledger breakpoints, tag spacing and home structure to the built home page; added `--primary-hover`; logged the Phase 2.5 items in section 21 |
+| 2.3 | 2026-11-24 | Header revision: availability line, Contact primary action, hover underline, richer mobile sheet with identity header and footer; Contact moved from the nav row to the action |
+| 2.4 | 2026-11-24 | Home hero action group (§8.5): one wrapped row with primary + outline + ruled tertiary, Button scale rebuilt (xs 28 / sm 36 / default 44 / lg 48) and duplicate focus ring removed |
 
 End of file.

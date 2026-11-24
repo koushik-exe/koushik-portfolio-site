@@ -35,7 +35,7 @@ export function SectionHeading({
           {title}
         </h2>
         {intro ? (
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-pretty text-muted-foreground">
+          <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-pretty text-muted-foreground">
             {intro}
           </p>
         ) : null}

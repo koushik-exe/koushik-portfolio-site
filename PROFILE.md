@@ -7,6 +7,7 @@ clearly marked placeholder and ask.
 ## Identity
 - Name: Koushik C
 - Title: Data Analyst | SQL, Excel & Python | MBA in Business Analytics
+- Current role: Junior Analyst, ObjectWays, Karur (Aug 2026 – Present, on-site)
 - Location: Karur, Tamil Nadu, India. Open to relocate: Chennai, Bengaluru, Coimbatore
 - Target roles: entry-level Data Analyst, Business Analyst, MIS Analyst
 - Audience: recruiters and hiring managers for those roles
@@ -15,10 +16,12 @@ clearly marked placeholder and ask.
 - Email and phone: NOT stored in the repo. Read the email from env var CONTACT_EMAIL.
 
 ## Summary
-MBA graduate specializing in Business Analytics. Skilled in SQL, Python and Microsoft Excel for
-turning raw data into business insights. Self-driven in building Python automation projects.
-Strong stakeholder communication, built in a customer-facing corporate role. Seeking an
-entry-level analyst role to apply analytical and process automation skills to real business problems.
+Junior Analyst at ObjectWays, Karur, working on AI data annotation and quality for egocentric
+(first-person image and video) and NLP text projects. MBA graduate specializing in Business
+Analytics, skilled in SQL, Python and Microsoft Excel for turning raw data into business
+insights. Self-driven in building Python automation projects. Strong stakeholder communication,
+built in a customer-facing corporate role. Open to analyst roles and to relocating to Chennai,
+Bengaluru or Coimbatore.
 
 ## Skills
 - Databases and querying: SQL, PostgreSQL
@@ -30,6 +33,14 @@ entry-level analyst role to apply analytical and process automation skills to re
 - Languages: English (professional working), Tamil (native)
 
 ## Experience
+Junior Analyst, ObjectWays, Karur (Aug 2026 - Present), on-site
+- Annotate and review egocentric image and video data and NLP text data for AI training projects,
+  following detailed project guidelines and annotation standards.
+- Run quality checks, identify inconsistencies and keep accuracy and consistency high across
+  assigned tasks.
+- Work to daily quality and productivity targets, coordinating with the team to meet project
+  deadlines.
+
 Business Associate, Altruist Technologies Pvt. Ltd. (Aug 2025 - Jan 2026)
 Client: Airtel, Bengaluru (on-site)
 - Supported Airtel's premium "Airtel Black" customer segment, handling 30 to 100+ inbound calls

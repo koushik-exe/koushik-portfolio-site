@@ -1,36 +1,81 @@
-export type SkillGroup = {
-  label: string;
-  items: string;
+export type SkillItem = {
+  /** Tool or capability name shown first, e.g. "SQL" or "Python". */
+  name: string;
+  /** Optional qualifier shown as a muted detail line, e.g. "advanced". */
+  detail?: string;
 };
 
+export type SkillGroup = {
+  label: string;
+  items: readonly SkillItem[];
+  /** Whether the group appears in the home page toolkit list. */
+  home: boolean;
+};
+
+/**
+ * Shared skill inventory for the home toolkit list and the About page skills
+ * section, so the two cannot drift. Source: PROFILE.md.
+ */
 export const skillGroups: readonly SkillGroup[] = [
   {
     label: "Databases and querying",
-    items: "SQL, PostgreSQL",
+    items: [{ name: "SQL" }, { name: "PostgreSQL" }],
+    home: true,
   },
   {
     label: "Programming",
-    items: "Python (scripting, automation, file handling)",
+    items: [
+      {
+        name: "Python",
+        detail: "scripting, automation, file handling",
+      },
+    ],
+    home: true,
   },
   {
     label: "Data and spreadsheets",
-    items: "Microsoft Excel (advanced), Google Sheets, data cleaning, data analysis",
+    items: [
+      { name: "Microsoft Excel", detail: "advanced" },
+      { name: "Google Sheets" },
+      { name: "Data cleaning" },
+      { name: "Data analysis" },
+    ],
+    home: true,
   },
   {
     label: "Analytics and automation",
-    items: "business analytics, workflow automation with n8n, local LLMs with Ollama",
+    items: [
+      { name: "Business analytics" },
+      { name: "n8n", detail: "workflow automation" },
+      { name: "Ollama", detail: "local LLMs" },
+    ],
+    home: true,
   },
   {
     label: "Tools",
-    items: "MS Word, MS PowerPoint, Canva",
+    items: [{ name: "MS Word" }, { name: "MS PowerPoint" }, { name: "Canva" }],
+    home: false,
   },
   {
     label: "Soft skills",
-    items:
-      "communication, problem solving, critical thinking, adaptability, time management",
+    items: [
+      { name: "Communication" },
+      { name: "Problem solving" },
+      { name: "Critical thinking" },
+      { name: "Adaptability" },
+      { name: "Time management" },
+    ],
+    home: false,
   },
   {
     label: "Languages",
-    items: "English (professional working), Tamil (native)",
+    items: [
+      { name: "English", detail: "professional working" },
+      { name: "Tamil", detail: "native" },
+    ],
+    home: false,
   },
 ];
+
+/** Skill groups shown on the home page, limited to the analytical core. */
+export const homeSkillGroups = skillGroups.filter((group) => group.home);
