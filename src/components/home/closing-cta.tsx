@@ -1,17 +1,21 @@
-import { Download } from "lucide-react";
+import { ArrowUpRight, Download } from "lucide-react";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/home/section-heading";
+import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
+import { getResumeLink } from "@/lib/resume";
 
 export function ClosingCta() {
+  const resume = getResumeLink();
+
   return (
     <section
       aria-labelledby="cta-heading"
       id="contact"
       className="scroll-mt-24 border-t border-border"
     >
-      <div className="mx-auto w-full max-w-content px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+      <Reveal className="mx-auto w-full max-w-content px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
         <SectionHeading
           index="04"
           label="Contact"
@@ -25,21 +29,31 @@ export function ClosingCta() {
             <Button asChild>
               <Link href="/contact">Contact me</Link>
             </Button>
-            <span
-              aria-hidden="true"
-              className="hidden h-6 w-px bg-border sm:block"
-            />
-            <a
-              href="/Koushik_C_Resume.pdf"
-              download
-              className="flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground hover:underline"
-            >
-              <Download aria-hidden="true" className="size-4" />
-              Download resume (PDF)
-            </a>
+            {resume ? (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="hidden h-6 w-px bg-border sm:block"
+                />
+                <a
+                  href={resume.href}
+                  {...(resume.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : { download: resume.download })}
+                  className="flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground hover:underline"
+                >
+                  {resume.external ? (
+                    <ArrowUpRight aria-hidden="true" className="size-4" />
+                  ) : (
+                    <Download aria-hidden="true" className="size-4" />
+                  )}
+                  {resume.label}
+                </a>
+              </>
+            ) : null}
           </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

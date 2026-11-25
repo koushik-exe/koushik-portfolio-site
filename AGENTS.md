@@ -39,7 +39,7 @@ Design system (tokens, type, spacing, radius, motion): see DESIGN.md. It is the 
 - No Playwright and no browser or visual-regression testing. Ignore test-driven-development. Write Vitest tests only for pure logic and Zod schemas.
 - Ignore skills unrelated to a portfolio site: slides, banner-design, brand.
 - No React Compiler.
-- Prisma is a release candidate (v8 rc). Read prisma.config.ts and the Prisma skills before writing any schema or client code. Do not guess the setup.
+- Prisma 7.10.1 is pinned (exact version, not ^); do not upgrade to the Prisma 8 RC. Read prisma.config.ts and the Prisma skills before writing any schema or client code. Do not guess the setup.
 - The public repo must never contain a phone number or personal email. Contact email comes from env var CONTACT_EMAIL.
 
 ## Content rules

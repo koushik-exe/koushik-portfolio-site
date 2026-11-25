@@ -1,7 +1,8 @@
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { getResumeLink } from "@/lib/resume";
 import { siteConfig } from "@/lib/site";
 
 const contents = [
@@ -18,6 +19,8 @@ const facts = [
 ];
 
 export function HomeHero() {
+  const resume = getResumeLink();
+
   return (
     <section aria-labelledby="hero-heading">
       <div className="mx-auto w-full max-w-content px-5 sm:px-8 lg:px-12">
@@ -65,19 +68,28 @@ export function HomeHero() {
                 <Link href="#contact">Contact</Link>
               </Button>
 
-              <span
-                aria-hidden="true"
-                className="hidden h-6 w-px bg-border sm:block"
-              />
-
-              <a
-                href="/Koushik_C_Resume.pdf"
-                download
-                className="flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground hover:underline"
-              >
-                <Download aria-hidden="true" className="size-4" />
-                Download resume (PDF)
-              </a>
+              {resume ? (
+                <>
+                  <span
+                    aria-hidden="true"
+                    className="hidden h-6 w-px bg-border sm:block"
+                  />
+                  <a
+                    href={resume.href}
+                    {...(resume.external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : { download: resume.download })}
+                    className="flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground hover:underline"
+                  >
+                    {resume.external ? (
+                      <ArrowUpRight aria-hidden="true" className="size-4" />
+                    ) : (
+                      <Download aria-hidden="true" className="size-4" />
+                    )}
+                    {resume.label}
+                  </a>
+                </>
+              ) : null}
             </div>
           </div>
 

@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/components/home/section-heading";
+import { Reveal } from "@/components/motion/reveal";
 import { homeSkillGroups } from "@/lib/skills";
 
 export function SkillsOverview() {
@@ -8,7 +9,7 @@ export function SkillsOverview() {
       id="skills"
       className="scroll-mt-24 border-t border-border"
     >
-      <div className="mx-auto w-full max-w-content px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+      <Reveal className="mx-auto w-full max-w-content px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
         <SectionHeading
           index="02"
           label="Toolkit"
@@ -34,7 +35,7 @@ export function SkillsOverview() {
             ))}
           </div>
         </dl>
-      </div>
+      </Reveal>
     </section>
   );
 }

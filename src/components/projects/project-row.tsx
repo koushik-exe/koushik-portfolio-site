@@ -1,9 +1,9 @@
 import { ArrowUpRight } from "lucide-react";
 
-import type { Project } from "@/lib/projects";
+import type { ProjectModel } from "@/generated/prisma/models";
 
 type ProjectRowProps = {
-  project: Project;
+  project: ProjectModel;
   index: number;
 };
 

@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 
-import type { Project } from "@/lib/projects";
+import type { ProjectModel } from "@/generated/prisma/models";
 import { ProjectFilterBar } from "@/components/projects/filter-bar";
 import { ProjectRow } from "@/components/projects/project-row";
 
-export function ProjectList({ projects }: { projects: readonly Project[] }) {
+export function ProjectList({ projects }: { projects: readonly ProjectModel[] }) {
   const [activeTool, setActiveTool] = useState<string | null>(null);
 
   const tools = [...new Set(projects.flatMap((project) => project.tools))];
-  const isHidden = (project: Project) =>
+  const isHidden = (project: ProjectModel) =>
     activeTool !== null && !project.tools.includes(activeTool);
 
   return (

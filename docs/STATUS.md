@@ -1,38 +1,45 @@
 # Status
 
-Updated 2026-11-24, after Phase 5 shipped the `/contact` page.
+Updated 2026-11-25, after Phase 10 (SEO and launch).
 
 ## Shipped
 
-- Phase 1: tokens, fonts, theme and Lenis providers, sticky header, desktop nav, mobile sheet, footer, skip link.
-- Phase 2: home page in the editorial layout, copy from `PROFILE.md`.
-- Phase 2.5: accessibility and design-system cleanup (buttons, focus rings, mobile-nav current state, sheet motion, list bullets, radii, footer icon, tag spacing, README, `.env.example`, primary hover token).
-- Phase 2.6: header revision. Role label at `md`; five inline nav items at `lg`; hover underline; the sheet serves tablet and mobile. `DESIGN.md` 4.5, 9.1–9.4, 12.1 in sync.
-- Phase 2.7: home refinement.
-- Phase 3: `/about` and `/experience` built from `PROFILE.md` (story, timeline, education, skills; resume PDF download TODO).
-- Phase 4: `/projects` index (page header, filter bar by tool with count label, ruled rows per home page, static data) and `/projects/[slug]` case studies (breadcrumb, meta row, Summary/Problem/Approach/Tools/Result sections in 15.2 order; null sections omitted), custom 404 page.
-- Phase 5: `/contact` — intro, form (name, email, message, optional subject, honeypot), shared Zod schema `src/lib/schemas/contact.ts`, Server Action `src/lib/actions/contact.ts` sending via Resend to `CONTACT_EMAIL` with reply-to set to the visitor, rate limiting via Upstash (5 per 10 minutes per IP, in-memory fallback in development), status tokens `--success`/`--warning` (DESIGN 2.3), Vitest tests for the schema.
+- Phase 1: tokens, fonts, theme and Lenis providers, header, nav, footer, skip link.
+- Phase 2: home page; accessibility cleanup; header revision; home refinement.
+- Phase 3: `/about` and `/experience` (story, timeline, education, skills).
+- Phase 4: `/projects` index and `/projects/[slug]` case studies; custom 404.
+- Phase 5: `/contact` form, shared Zod schema, Resend, Upstash rate limit; messages saved to Neon.
+- Phase 6: Prisma 7.10.1 + Neon; Project, Post, Testimonial, Message; seed script; public projects read from the database.
+- Phase 7: Auth.js v5 GitHub OAuth, admin root layout, `proxy.ts` + `requireAdmin()`, CRUD, messages, conditional testimonials.
+- Phase 8: `/blog` and `/blog/[slug]` with guarded MDX, GFM, heading ids, DataTable/BarChart/LineChart and a `noindex` admin preview. One unpublished sample draft is seeded.
+- Phase 9: Motion `Reveal` islands, home GSAP ScrollTrigger rows, reading progress, 400ms chart draw-in; reduced motion and no-JS keep the final state.
+- Phase 10: `metadataBase` + canonicals + 120-160 character descriptions, OG/Twitter cards, `sitemap.ts`, `robots.ts`, Person JSON-LD, `icon.svg`, theme-color sync, public-only Vercel Analytics, conditional resume CTA, route-change focus, and `docs/LAUNCH.md`.
 
 ## Verification
 
-- `npx tsc --noEmit`: pass
-- `npm run lint`: pass
-- `npm run build`: pass; routes generated: `/`, `/_not-found`, `/about`, `/experience`, `/projects`, `/projects/fileflow`, `/projects/n8n-ai-career-platform`, `/projects/developer-portfolio-website`, `/contact`, `/blog`
-- `npm test`: 12 passed (schema tests)
+- `npx tsc --noEmit`, `npm run lint`, `npm test` (87 tests) and `npm run build`: pass.
+- Production-build smoke test: all public routes 200, missing project and unpublished draft 404, OG/Twitter images 200 PNG 1200x630, sitemap/robots correct, admin redirect + `noindex` + no analytics, privacy scan clean.
+- Draft published temporarily for testing, then reverted: `published=false`, `publishedAt=null`.
+- Lighthouse: not run; manual Chrome run on the deployed URL is in `docs/LAUNCH.md`.
+- Not browser-tested locally: live contact send, manual theme toggle, keyboard route focus.
+
+## Vercel setup
+
+Set `DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED` (direct), `AUTH_SECRET`, `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`, `ADMIN_GITHUB_ID`, `CONTACT_EMAIL`, `CONTACT_FROM`, `RESEND_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, and `NEXT_PUBLIC_SITE_URL` for Production. `RESUME_URL` is optional and hides the resume CTA when unset. The GitHub OAuth callback is `https://<site>/api/auth/callback/github`. Full runbook: `docs/LAUNCH.md`.
+
+## Launch blockers
+
+- No real blog posts; the seeded sample stays an unpublished draft.
+- No real consented testimonials; the page is hidden and `noindex`.
+- The resume PDF is out of date and gitignored; host a current copy before setting `RESUME_URL`.
+- `CONTACT_FROM` still uses Resend's test sender until a domain is verified.
+- Lighthouse has not been run, so the 19.2 targets are unverified.
 
 ## Not built yet
 
-- `/blog` — stub; posts (Phase 8)
-- Testimonials stay hidden until real ones exist
-
-## Open
-
-- /contact fails closed in production when the Upstash variables are missing (generic error + server log).
-
-- `CONTACT_FROM` is Resend's default test sender. Change it to a verified custom domain before sending to anyone else.
-
-- TODO (Phase 6): update the /contact privacy note - it currently says the IP is used briefly to limit spam; when messages are saved to the database, state the new facts.
+- Security headers/CSP, PWA manifest, Speed Insights.
+- Real content beyond the sample draft and `PROFILE.md` facts.
 
 ## Rule
 
-- Do not deploy publicly until every navigation target exists (DESIGN 9.2).
+- Do not deploy publicly until every navigation target exists and the launch checklist passes.

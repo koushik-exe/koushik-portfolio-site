@@ -31,7 +31,7 @@ export const featuredProjects: readonly FeaturedProject[] = [
   {
     slug: "fileflow",
     title: "FileFlow",
-    tools: ["Python", "file automation"],
+    tools: ["Python"],
     summary:
       "A Python tool that organizes files by type and date, flags duplicates with SHA-256 hashing and reads EXIF data from images. It runs a two-phase organize-and-verify pass with error handling, then writes its own log and report.",
     home: true,

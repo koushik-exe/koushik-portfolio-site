@@ -12,7 +12,12 @@ import {
   spamProtectionStatus,
   type SpamProtectionMode,
 } from "@/lib/spam-protection";
-import { contactSchema, isHoneypotFilled } from "@/lib/schemas/contact";
+import { prisma } from "@/lib/db";
+import {
+  contactSchema,
+  isHoneypotFilled,
+  type ContactFormData,
+} from "@/lib/schemas/contact";
 
 /**
  * Spam protection (Phase 5): Upstash Redis + Ratelimit — 5 messages per 10
@@ -86,6 +91,21 @@ function fieldErrors(error: ZodError): Record<string, string> {
   return errors;
 }
 
+/**
+ * Phase 6: save the message to the Message table. Callers wrap this in
+ * `catch`: a failed save must not block the email.
+ */
+async function saveMessage(data: ContactFormData): Promise<void> {
+  await prisma.message.create({
+    data: {
+      name: data.name,
+      email: data.email,
+      message: data.message,
+      subject: data.subject,
+    },
+  });
+}
+
 /** Server-log name of an error — the type only, never values. */
 function errorName(error: unknown): string {
   return error instanceof Error ? error.name : typeof error;
@@ -145,6 +165,13 @@ export async function contactUs(formData: FormData): Promise<ContactResult> {
     return { status: "invalid", errors: fieldErrors(parsed.error) };
   }
   const data = parsed.data;
+
+  // Phase 6: also save the message to the Message table. Save first: a
+  // failed save must not block the email, and a failed email must not lose
+  // the saved message.
+  await saveMessage(data).catch((error) => {
+    console.error("contact form: Message save failed", errorName(error));
+  });
 
   const contactEmail = process.env.CONTACT_EMAIL;
   const contactFrom = process.env.CONTACT_FROM;

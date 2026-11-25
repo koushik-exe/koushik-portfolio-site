@@ -4,9 +4,15 @@ import { ContactCta } from "@/components/contact-cta";
 import { MobileNav } from "@/components/mobile-nav";
 import { NavLink } from "@/components/nav-link";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { siteConfig } from "@/lib/site";
+import { hasPublishedTestimonials } from "@/lib/data/testimonials";
+import { siteConfig, type NavItem } from "@/lib/site";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const showTestimonials = await hasPublishedTestimonials();
+  const nav: NavItem[] = showTestimonials
+    ? [...siteConfig.nav, { label: "Testimonials", href: "/testimonials" }]
+    : [...siteConfig.nav];
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex h-16 w-full max-w-content items-center gap-4 px-5 sm:px-8 lg:h-[4.5rem] lg:px-12">
@@ -28,7 +34,7 @@ export function SiteHeader() {
 
         <nav aria-label="Primary" className="hidden lg:block">
           <ul className="flex items-center gap-5 lg:gap-6">
-            {siteConfig.nav.map((item) => (
+            {nav.map((item) => (
               <li key={item.href}>
                 <NavLink href={item.href} label={item.label} />
               </li>
@@ -49,7 +55,7 @@ export function SiteHeader() {
           </span>
           <ThemeToggle />
           <ContactCta className="hidden lg:inline-flex" />
-          <MobileNav />
+          <MobileNav nav={nav} />
         </div>
       </div>
     </header>

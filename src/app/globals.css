@@ -95,7 +95,7 @@
   --gray-500: #6b7280;
   --teal-300: #5eead4;
   --ochre-300: #f5c97b;
-  --violet-300: #c4b5fd;
+  --violet-400: #a78bfa;
   --gray-400: #94a3b8;
 
   /* Primitives: status tokens (added in Phase 5) */
@@ -168,7 +168,7 @@
   --chart-1: var(--blue-200);
   --chart-2: var(--teal-300);
   --chart-3: var(--ochre-300);
-  --chart-4: var(--violet-300);
+  --chart-4: var(--violet-400);
   --chart-5: var(--gray-400);
   --sidebar: var(--night-850);
   --sidebar-foreground: var(--slate-100);

@@ -207,7 +207,8 @@ export function ContactForm() {
           {submitting ? "Sending" : "Send message"}
         </Button>
         <p className="text-sm text-muted-foreground">
-          Your message is used only to reply. Your IP address is used briefly to limit spam.
+          Your message is saved in a database record used to reply to you.
+          Your IP address is used briefly to limit spam.
         </p>
       </div>
     </form>

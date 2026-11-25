@@ -16,7 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { siteConfig } from "@/lib/site";
+import { siteConfig, type NavItem } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const socials = [
@@ -24,7 +24,7 @@ const socials = [
   { label: "LinkedIn", href: siteConfig.social.linkedin },
 ];
 
-export function MobileNav() {
+export function MobileNav({ nav }: { nav: NavItem[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -64,7 +64,7 @@ export function MobileNav() {
           className="min-h-0 flex-1 overflow-y-auto px-2 py-2"
         >
           <ul className="flex flex-col">
-            {siteConfig.nav.map((item, index) => {
+            {nav.map((item, index) => {
               const isActive =
                 item.href === "/"
                   ? pathname === "/"

@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/home/section-heading";
+import { Reveal } from "@/components/motion/reveal";
 import { experience, homeEducation } from "@/lib/profile";
 
 export function ExperienceSnapshot() {
@@ -11,7 +12,7 @@ export function ExperienceSnapshot() {
       id="experience"
       className="scroll-mt-24 border-t border-border"
     >
-      <div className="mx-auto w-full max-w-content px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+      <Reveal className="mx-auto w-full max-w-content px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
         <SectionHeading
           index="03"
           label="Experience"
@@ -87,7 +88,7 @@ export function ExperienceSnapshot() {
             ))}
           </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

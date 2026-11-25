@@ -1,11 +1,12 @@
 import { ArrowUpRight } from "lucide-react";
 
 import { SectionHeading } from "@/components/home/section-heading";
-import { featuredProjects } from "@/lib/projects";
+import { SelectedWorkMotion } from "@/components/motion/selected-work-motion";
+import { getFeaturedProjects } from "@/lib/data/projects";
 
-const homeProjects = featuredProjects.filter((project) => project.home);
+export async function FeaturedProjects() {
+  const homeProjects = await getFeaturedProjects();
 
-export function FeaturedProjects() {
   return (
     <section
       aria-labelledby="projects-heading"
@@ -21,7 +22,7 @@ export function FeaturedProjects() {
           intro="Two personal projects, not client work: automation tools built on my own time."
         />
 
-        <ol className="mt-12 border-b border-border">
+        <SelectedWorkMotion className="mt-12 border-b border-border">
           {homeProjects.map((project, index) => (
             <li
               key={project.slug}
@@ -48,7 +49,7 @@ export function FeaturedProjects() {
               </div>
             </li>
           ))}
-        </ol>
+        </SelectedWorkMotion>
 
         <div className="mt-8 grid gap-x-8 lg:grid-cols-12">
           <div className="lg:col-span-8 lg:col-start-5">

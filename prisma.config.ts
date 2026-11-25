@@ -10,6 +10,6 @@ export default defineConfig({
   datasource: {
     // The CLI (migrate dev/deploy) uses the direct string for Neon;
     // the app client uses the pooled DATABASE_URL.
-    url: env("DIRECT_URL"),
+    url: env("DATABASE_URL_UNPOOLED"),
   },
 });

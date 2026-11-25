@@ -10,6 +10,7 @@ export const siteConfig = {
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
     { label: "Projects", href: "/projects" },
+    { label: "Blog", href: "/blog" },
     { label: "Experience", href: "/experience" },
   ],
   primaryAction: { label: "Contact", href: "/contact" },
@@ -19,4 +20,4 @@ export const siteConfig = {
   },
 } as const;
 
-export type NavItem = (typeof siteConfig.nav)[number];
+export type NavItem = { label: string; href: string };

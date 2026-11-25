@@ -5,8 +5,8 @@ ask which one is right before changing either. Change a value here and in
 `src/app/globals.css` together. Never introduce a one-off color, font, radius, spacing or
 motion value inside a component.
 
-Version: 2.3
-Status: Phase 1 and Phase 2 built. Phases 3 to 10 follow these rules.
+Version: 2.7
+Status: Phases 1 to 10 built. Lighthouse is a manual launch check.
 Owner: Koushik C. Edit this file by hand in VS Code and save it as UTF-8.
 
 ---
@@ -196,7 +196,7 @@ Tailwind utilities such as `bg-background`, `text-muted-foreground`, `border-bor
 | `--chart-1` | `#9DBBFF` | data series 1 |
 | `--chart-2` | `#5EEAD4` | data series 2 |
 | `--chart-3` | `#F5C97B` | data series 3 |
-| `--chart-4` | `#C4B5FD` | data series 4 |
+| `--chart-4` | `#A78BFA` | data series 4 |
 | `--chart-5` | `#94A3B8` | data series 5 |
 
 ### 2.3 Status tokens
@@ -234,6 +234,8 @@ higher, large text 3:1 or higher, interface boundaries 3:1 or higher.
 | ring on background | 6.41 | 9.96 | 3.0 | pass |
 | success on background | 5.12 | 12.87 | 4.5 | pass |
 | warning on background | 4.71 | 12.26 | 4.5 | pass |
+| chart-4 on background | 4.71 | 7.00 | 3.0 | pass |
+| chart-4 on card | 4.92 | 6.66 | 3.0 | pass |
 | border on background | 1.26 | 1.32 | decorative | not for essential boundaries |
 
 Notes:
@@ -279,8 +281,11 @@ raised surfaces.
 - No flash of the wrong theme on load. The provider sets the class before paint.
 - Both themes use the same layout, spacing and type. Only color tokens change.
 - `color-scheme` is set so native controls, scrollbars and form fields follow the theme.
-- The browser `theme-color` meta tag is added in Phase 10 through a tokenised approach.
-  Do not hard-code a hex for it in a component.
+- `theme-color` is tokenised: the `viewport` export renders media-scoped light/dark values from
+  `src/lib/brand-colors.ts` for no-JS visitors, then `ThemeColorSync` reads the resolved
+  `--background` token after mount and on every theme change. `brand-colors.ts` is the one
+  documented mirror of the CSS tokens because Satori and the no-JS meta tag cannot read CSS
+  custom properties; keep it in sync with `:root`.
 
 ### 2.8 Color rationale (evidence and limits)
 
@@ -548,7 +553,7 @@ The page composition for long pages:
 |---|---|---|
 | Hover and press | 150ms | ease-out |
 | Color and border change | 200ms | ease-out |
-| Entrance reveal | 250 to 300ms | `cubic-bezier(0.22, 1, 0.36, 1)` |
+| Entrance reveal | 300ms (300 to 400ms allowed, 6.5) | `cubic-bezier(0.22, 1, 0.36, 1)` |
 | Sheet slide | 250ms | `cubic-bezier(0.22, 1, 0.36, 1)` |
 
 ### 6.2 Lenis
@@ -582,6 +587,20 @@ setting turned on before any animation phase is accepted.
   animation when reduced motion is set.
 - Content needed for search engines or for understanding must be present in the HTML and
   readable before any script runs. Never hide it until an animation fires.
+
+Phase 9 implementation:
+
+- `src/components/motion/reveal.tsx` supplies `Reveal` and `RevealGroup`: 12px rise, 300ms,
+  60ms stagger and at most six siblings. Only blocks that start below the fold are armed, so
+  the first paint, no-JS and reduced-motion views are complete.
+- Home Selected work rows use GSAP ScrollTrigger in `selected-work-motion.tsx`, dynamically
+  imported on the home page only. `gsap.matchMedia` reverts under reduced motion; there is no
+  pinning or scroll-jacking.
+- The reading progress bar is 2px `--link` on public article pages only. Under reduced motion
+  the spring is bypassed and the bar follows the scroll position directly.
+- Charts use one clip reveal per chart, 400ms: bars upward, lines left-to-right. The clip is
+  applied only after mount and only when the chart starts below the fold; the server HTML,
+  no-JS and reduced-motion views show the complete chart.
 
 ### 6.6 Never allowed
 
@@ -749,6 +768,9 @@ The home hero carries its actions as one aligned action group rather than separa
 - A quiet tertiary action (resume download) sits in the same row after a 1px × 24px `--border`
   hairline at `sm` and up. Below `sm` the divider is hidden and the action wraps onto its own
   line, left aligned.
+- The resume action renders only when `RESUME_URL` is set to a current copy; when it is unset,
+  the link and its divider are omitted so no page links to a missing or outdated PDF. External
+  URLs use `target="_blank"` and `rel="noopener noreferrer"` with "View resume (PDF)".
 - Hover on the tertiary: muted → foreground and a 1px underline.
 - No full-width slabs and no stacked groups; every target stays at 44px height.
 - The single 2px `--ring` focus ring comes from the global `:focus-visible` rule in
@@ -850,9 +872,13 @@ but no site is deployed publicly until every nav target exists.
 
 ### 10.4 Favicon and social image
 
-- Favicon: simple monogram "K" or "KC" in serif on the paper color, created as a static file.
-- Social share image: plain paper background, name in serif, title line in sans, no
-  decoration. Generated with the Next.js metadata image route in Phase 10.
+- Favicon: `src/app/icon.svg`, a serif "K" monogram on the paper color. The default Next
+  `favicon.ico` is removed.
+- Social share image: plain paper background, name in Source Serif 4 SemiBold, title line in
+  sans, no decoration. `src/lib/og.tsx` renders one shared 1200x630 card; stable route handlers
+  at `/opengraph-image` and `/twitter-image` serve it so every page can reference the same URLs.
+- Satori cannot read CSS custom properties, so the card uses the literal light-theme values in
+  `src/lib/brand-colors.ts`; keep that file in sync with `:root`.
 
 ---
 
@@ -1000,9 +1026,15 @@ This is an analyst portfolio, so tables, charts and code are first-class content
   display of the underlying table where practical.
 - Include a source line and the time period in caption style.
 - Charts have an accessible name and a long description (`aria-describedby` to the summary).
+  Each chart also repeats its values in a visually hidden table for screen readers.
 - Animation: lines and bars may draw in once, 400ms, only when reduced motion is off.
-- Charts are drawn with a charting approach decided in Phase 4. Whatever is used must read its
-  colors from the tokens above. Hard-coded chart colors are not allowed.
+- Charts are hand-built server components in `src/components/blog/`: `BarChart` uses HTML/CSS
+  bars and `LineChart` uses inline SVG. Both read their colors from `--chart-1` to `--chart-5`;
+  hard-coded chart colors are not allowed. Phase 9 adds two small client wrappers in
+  `chart-draw-in.tsx`: `BarDrawIn` clips the bars upward and `LineDrawIn` clips the lines
+  left-to-right. Each chart runs one 400ms animation, only after mount and only when the chart
+  starts below the fold. The server HTML, no-JS and reduced-motion views show the complete
+  chart. The admin preview passes `animateCharts: false`, so `/admin` runs no chart motion.
 
 ### 13.3 Data stories
 
@@ -1017,10 +1049,11 @@ This is an analyst portfolio, so tables, charts and code are first-class content
 - Horizontal scroll inside the block. Never wrap SQL or Python mid-statement.
 - A language label in mono 11px uppercase at the top right of the block (`SQL`, `Python`).
 - A copy button is optional and, if added, has an accessible label and a visible confirmation
-  that does not rely on color alone.
+  that does not rely on color alone. Phase 8 has no copy button.
 - Syntax highlighting uses a two-tone scheme from the tokens: keywords in `--link`, comments in
   `--muted-foreground`, strings in `--chart-3`, everything else in `--foreground`. Contrast
-  must be checked in both themes.
+  must be checked in both themes. Phase 8 uses a hand-written SQL/Python tokenizer in
+  `src/lib/blog/highlight.ts`; unknown languages render as plain text.
 - Inline code uses mono at 0.9em with a `--muted` background and 2px radius, padding 2px 4px.
 - Show real, runnable code only. Long listings link to the repository instead of pasting
   hundreds of lines.
@@ -1160,9 +1193,14 @@ development. A TODO must never ship.
 
 ### 16.3 MDX components
 
-- A fixed set of MDX components maps to the elements above. Do not allow arbitrary HTML
-  styling inside posts.
-- Headings in MDX get anchor ids so sections can be linked.
+- The fixed set is `DataTable`, `BarChart` and `LineChart`, plus the standard Markdown
+  elements. `remark-gfm` adds tables and footnotes. Arbitrary HTML and unknown JSX are rejected.
+- The authoring guard rejects imports/exports, raw HTML, level-1 headings and `{...}` child
+  expressions. Attribute expressions are allowed only on the three custom components.
+- Headings h2-h4 get stable anchor ids so sections can be linked; existing ids such as the GFM
+  footnote heading are preserved.
+- `@mdx-js/mdx` 3.1.1 `evaluate()` runs in a server-only module at request time. There is no
+  `next-mdx-remote`.
 
 ### 16.4 Metadata
 
@@ -1173,6 +1211,8 @@ development. A TODO must never ship.
 ### 16.5 Reading aids
 
 - A 2px reading progress bar in `--link` is allowed in Phase 9 and respects reduced motion.
+  Phase 9 renders it on public `/blog/[slug]` pages only, never in the admin preview. Under
+  reduced motion the spring is bypassed and the bar follows the scroll position directly.
 - No floating share buttons, no popups, no newsletter modals.
 
 ---
@@ -1226,12 +1266,21 @@ development. A TODO must never ship.
 
 ### 19.1 Metadata
 
-- Every page has a unique title and description, written from `PROFILE.md` facts.
+- Every public page has a unique title and a 120 to 160 character description, written from
+  `PROFILE.md` facts. `createPageMetadata` in `src/lib/seo.ts` truncates at a word boundary.
 - Title pattern: `Page | Koushik C`. The home title is `Data Analyst | SQL, Excel & Python | Koushik C`.
-- Descriptions are 120 to 160 characters, plain, with no keyword stuffing.
-- Add `sitemap.ts`, `robots.ts` and canonical URLs in Phase 10. Add structured data for a
-  Person only with facts that appear on the page.
-- No email address or phone number in metadata or structured data.
+- `metadataBase` and every canonical come from `src/lib/site-url.ts`: `NEXT_PUBLIC_SITE_URL`
+  first, then `VERCEL_PROJECT_PRODUCTION_URL`, then `http://localhost:3000`. Preview and
+  localhost origins must never appear in production canonicals.
+- Each page sets its own `openGraph` and `twitter` object because Next.js shallowly merges
+  metadata; the shared helper always includes the 1200x630 `/opengraph-image` and
+  `/twitter-image` routes.
+- `src/app/sitemap.ts` includes the six static public pages, published projects and published
+  posts, and adds `/testimonials` only after a consented quote is published. `src/app/robots.ts`
+  allows the public site, disallows `/admin` and `/api`, and blocks preview deployments.
+- The home page carries `Person` JSON-LD built from `PROFILE.md` facts only.
+- No email address or phone number in metadata or structured data. MDX `safeHref` rejects
+  `mailto:` and `tel:`.
 
 ### 19.2 Performance targets
 
@@ -1248,9 +1297,15 @@ development. A TODO must never ship.
 
 - Fonts: limit weights and subsets, `display: swap`, self-hosted by `next/font`.
 - Images: `next/image`, correct sizes, modern formats, lazy-load below the fold.
-- Client components only where interaction or animation needs them.
-- Load GSAP and ScrollTrigger only on pages that use them, and dynamically if possible.
+- Client components only where interaction or animation needs them. Phase 9 keeps motion in
+  five small islands: `Reveal`, `SelectedWorkMotion`, `ReadingProgress`, `BarDrawIn` and
+  `LineDrawIn`. Phase 10 adds `RouteFocus` and `ThemeColorSync` (both render nothing) plus
+  Vercel Analytics, which is mounted on the public layout only.
+- Load GSAP and ScrollTrigger only on pages that use them, and dynamically if possible. Phase 9
+  has one GSAP import, `selected-work-motion.tsx`, loaded on the home page only.
 - Do not ship unused shadcn components or unused icons.
+- Social images are generated at build time, so the font asset is read once at module scope and
+  never ships to the browser.
 
 ---
 
@@ -1295,11 +1350,7 @@ item by syncing the code and the file, then delete the row.
 | Header blur | decided | Kept as a sanctioned exception in section 12.1 |
 | Contact CTA on `/contact` | decided | `aria-current="page"` only, no visual state change; the page heading carries the location |
 | Sticky Skills heading | decided | Allowed through CSS sticky, section 6.8 |
-| Inner page title size | new | 48px desktop and 36px mobile, section 3.2. Not built yet |
 | Status tokens | added 2026-11-24 | `--success` / `--warning` in `globals.css` (primitives) plus `--color-success` / `--color-warning` in `@theme`; added in Phase 5. Measured vs background: success 5.12 light / 12.87 dark, warning 4.71 light / 12.26 dark - all pass |
-| Syntax highlight colors | pending | Verify contrast in both themes when code blocks are built |
-| Chart implementation | pending | Choose the approach in Phase 4, must read token colors |
-| Chart-4 in dark theme | pending (Phase 4) | ΔE 0.5 protanopia, 5.3 deuteranopia against chart-1 (Machado 2009, ΔE76). Candidate `#A78BFA` scores 23.4, 17.3, 13.1 against the other four. Replace before charts ship, then re-measure |
 | Resume PDF in repository | blocked | Ignored and untracked; a Git-based deploy will not include it. Needs a hosting decision |
 | Contents index below `lg` | decided | Hidden under 1024px, section 5.7 updated |
 | Home project rows | decided | Static rows until Phase 4 adds `/projects/[slug]`; the section footer links to GitHub |
@@ -1308,14 +1359,44 @@ item by syncing the code and the file, then delete the row.
 | Phase 4 — project data | decided | `src/lib/projects.ts` owns data and copy; fields can be `null` until filled; results read "No measured result yet." until real |
 | Phase 4 — 404 | new | Custom `src/app/not-found.tsx` per 18.1 |
 | Phase 4 — links on project pages | decided | External links (e.g. dev site live link) use `ArrowUpRight` 16px + `rel="noopener noreferrer"` |
-| Blog nav item | pending | Hidden from `site.ts` until Phase 8 builds `/blog` |
+| Phase 8 — blog nav | decided | Blog sits between Projects and Experience in `site.ts` now that `/blog` exists |
 | Experience and education data | decided | Single source in `src/lib/profile.ts`; `src/lib/timeline.ts` removed |
-| `theme-color` meta | pending | Phase 10, tokenised approach |
-| Focus to h1 after route change | pending | Phase 10 |
-| Prisma version mismatch | pending | Phase 6: installed `@prisma/client` 7.10.1 does not match the `prisma` CLI 8.0.0-rc.34; align before schema work |
+| `theme-color` meta | resolved 2026-11-25 | `viewport` media-scoped light/dark values from `src/lib/brand-colors.ts`; `ThemeColorSync` reads `--background` after mount and on theme change |
+| Focus after route change | resolved 2026-11-25 | `RouteFocus` focuses `#main` after client navigation, skipping first load and hash navigation |
+| Prisma version mismatch | resolved 2026-11-25 | `prisma` + `@prisma/client` both 7.10.1 (match); `@prisma/adapter-neon` for the app client (Vercel + Neon) |
+| Phase 6 — Prisma database (Neon) | new | `prisma/schema.prisma` (Project, Post, Testimonial, Message); `prisma/migrations/20261125044150_init/migration.sql` applied with `npx prisma migrate dev --name init`; `src/lib/db.ts` (server-only singleton, `@prisma/adapter-neon` + pooled `DATABASE_URL`); `src/lib/data/*.ts` read functions (public pages read published rows only); `prisma/seed.ts` (idempotent upsert by slug, never deletes) |
+| Phase 6 — /projects from the DB | new | `/projects`, `/projects/[slug]` and the home featured projects read from the DB; static with `revalidate = 300` and `generateStaticParams`; read-only comparison vs `src/lib/projects.ts`: identical rows |
+| Phase 6 — /contact saves messages | new | Server Action saves each message to the `Message` table (failed save doesn't block the email; failed email doesn't lose the saved message); privacy note updated in `src/components/contact/contact-form.tsx` |
+| Phase 6 — Vercel setup | added 2026-11-25 | Vercel env: `DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED` (direct); `prisma.config.ts` reads `DATABASE_URL_UNPOOLED`; `prebuild` runs `prisma generate`; `src/generated/` gitignored |
 | Vitest setup | added 2026-11-24 | `vitest.config.ts`, `vitest run` script, schema tests in `src/lib/schemas/contact.test.ts` (12 passing) |
 | Phase 5 — /contact | new | /contact + ContactForm (src/components/contact/contact-form.tsx): per 14, labels above fields, 44px inputs, errors via ria-describedby + live region, focus to first invalid field, sending/success/failure states; honeypot hidden from people and AT; CONTACT_FROM is Resend default test sender (verified domain required before sending to anyone else) |
 | Home action group (§8.5) | decided | Button scale rebuilt, single focus ring, hero action group + closing CTA applied, new §8.5 |
+| Phase 7 — auth | new | `next-auth@beta` 5.0.0-beta.32: GitHub OAuth allow-listed on `ADMIN_GITHUB_ID`, JWT sessions, no adapter; `pages.signIn` and `pages.error` point to `/admin/signin`; `trustHost: true` because the site sits behind Vercel's trusted proxy; Next 16 `src/proxy.ts` (renamed from middleware) redirects logged-out `/admin/*`, and every admin Server Action/data function also calls `requireAdmin()` |
+| Phase 7 — admin shell | new | second root layout `src/app/admin/layout.tsx` (includes `<html>`/`<body>`), no public header/footer, `noindex`; header shows the signed-in GitHub name and sign out; top tabs are Projects, Posts, Testimonials, Messages; the sign-in page renders alone, without admin chrome |
+| Phase 7 — route groups | new | public routes moved under `src/app/(public)/`; URLs unchanged; that layout owns `<html>/<body>` and a 5-minute revalidate because the nav queries the database; `globalNotFound` experimental flag + `src/app/global-not-found.tsx` are required by multiple root layouts |
+| Phase 7 — CRUD | new | shared Zod schemas `src/lib/schemas/admin.ts`; Server Actions `src/lib/actions/admin.ts`; admin reads `src/lib/data/admin.ts`; delete uses a native `<dialog>` that names the item; `published` flags control public visibility |
+| Phase 7 — testimonial visibility | decided | `/testimonials` exists but is unlinked and `noindex` until at least one published testimonial with consent; header and mobile nav add the entry conditionally; testimonial mutations revalidate `"/", "layout"` |
+| Phase 8 — MDX pipeline | new | `@mdx-js/mdx` 3.1.1 `evaluate()` in `src/lib/blog/render-mdx.tsx`; `remark-gfm` 4 for tables and footnotes; `guardMdx` rejects imports/exports, raw HTML, unknown JSX, h1 and child expressions; h2-h4 ids via `rehypeHeadingIds`; fixed components `DataTable`, `BarChart`, `LineChart` |
+| Phase 8 — charts | new | Static server components: `BarChart` (HTML/CSS bars) and `LineChart` (SVG, 1-3 series with solid/dashed/dotted lines and circle/square/triangle markers); colors from `--chart-1` to `--chart-3`; hidden data table for screen readers; draw-in animation deferred to Phase 9 |
+| Phase 8 — code blocks | new | Hand-written SQL/Python tokenizer in `src/lib/blog/highlight.ts`; keyword `--link`, comment `--muted-foreground`, string `--chart-3`, plain `--foreground`; no copy button; unknown languages render plain |
+| Phase 8 — contrast | measured 2026-11-25 | Syntax on `--muted`: keyword 5.82 light / 8.94 dark, comment 6.00 / 7.24, string 4.65 / 11.00, plain 15.26 / 14.58. Dark `chart-4` `#A78BFA` on background 7.00, card 6.66, muted 6.28 |
+| Phase 8 — title template | resolved 2026-11-25 | Page-level titles no longer include `| Koushik C`; the public layout template adds it once. `global-not-found` keeps its own full title because it has no public layout |
+| Phase 8 — admin preview | new | `/admin/posts/[id]/preview` is admin-only and `noindex`; `savePost` runs `validateMdx`, which compiles with the same guard, GFM and heading-id plugins before writing; preview links on the posts table and edit page |
+| Phase 8 - sample draft | new | One unpublished draft `sample-tables-code-charts` seeded from `prisma/sample-post.mdx`; every number labelled synthetic; never published or listed |
+| Phase 9 - 404 landmark | resolved 2026-11-25 | `src/app/(public)/not-found.tsx` renders a div; the public layout owns the only `<main id="main">` |
+| Phase 9 - reveal | new | `src/lib/motion.ts` (12px, 300ms, 60ms stagger, 3 concurrent) and `src/components/motion/reveal.tsx`; only blocks below the fold are armed, focus reveals an armed block, reduced motion and no-JS keep the final state |
+| Phase 9 - selected work | new | `src/components/motion/selected-work-motion.tsx` dynamically imports GSAP + ScrollTrigger on the home page only; two rows, 60ms stagger, `gsap.matchMedia` reverts under reduced motion, no pinning |
+| Phase 9 - inner pages | new | About Experience/Education/Skills, Experience timeline and Blog list use `Reveal`; the Projects index and every page header stay instant |
+| Phase 9 - reading progress | new | `src/components/blog/reading-progress.tsx`, public `/blog/[slug]` only; 2px `--link`; `useReducedMotion` bypasses the spring |
+| Phase 9 - chart draw-in | new | `src/components/blog/chart-draw-in.tsx`: one 400ms clip per chart, bars upward and lines left-to-right, only below the fold; reduced motion and no-JS show the complete chart; the admin preview passes `animateCharts: false` so `/admin` stays static |
+| Phase 9 - reduced motion/no-JS | verified 2026-11-25 | Code audit: Reveal, SelectedWorkMotion, ReadingProgress and ChartDrawIn each have a reduced-motion path; all motion styles are applied after mount, so the server HTML and no-JS view are complete. Lenis already stops under reduced motion; the global CSS rule collapses CSS transitions and sheet animations |
+| Phase 10 - site URL and metadata | new | `src/lib/site-url.ts` (NEXT_PUBLIC_SITE_URL -> VERCEL_PROJECT_PRODUCTION_URL -> localhost) and `src/lib/seo.ts` (`createPageMetadata`, 160-char truncation, Person JSON-LD); every public page has a canonical, OG and Twitter object |
+| Phase 10 - crawl files | new | `src/app/sitemap.ts` (static pages, published projects/posts, testimonials only when published; ISR 300 plus admin revalidation) and `src/app/robots.ts` (allow public, disallow admin/api, disallow all on Vercel preview) |
+| Phase 10 - social card | new | `src/lib/og.tsx` shared 1200x630 card; Source Serif 4 SemiBold TTF under `src/assets/og/`; stable route handlers at `/opengraph-image` and `/twitter-image` (page-level metadata replaces the parent `openGraph` object, so hashed file-convention images would vanish on nested pages); `brand-colors.ts` mirrors the light tokens because Satori cannot read CSS variables |
+| Phase 10 - favicon, theme color, analytics | new | `src/app/icon.svg` replaces the default favicon; `viewport` + `ThemeColorSync`; `@vercel/analytics/next` on the public layout only |
+| Phase 10 - resume | decided | `RESUME_URL` optional; both CTAs and their dividers are hidden when unset. The PDF stays gitignored and is never linked from a deploy that cannot serve it |
+| Phase 10 - MDX links | decided | `safeHref` rejects `mailto:` and `tel:`; only root-relative, hash and http(s) links render |
+| Phase 10 - Lighthouse | pending | Manual Chrome run on the deployed URL; not run yet, so 19.2 is unverified |
 
 ### 21.1 Recorded arbitrary values
 
@@ -1325,18 +1406,26 @@ Scale-aligned arbitrary values (`leading-[1.05]`, `leading-[1.15]`, `tracking-[-
 
 | Value | Where used |
 |---|---|
-| `text-[0.6875rem]` (11px) | mono labels and tags |
-| `tracking-[0.16em]` | section openers, header role label, hero eyebrow |
-| `tracking-[0.14em]` | facts ledger, skill labels, experience dates, project tags |
+| `text-[0.6875rem]` (11px) | mono labels and tags, chart labels, code language label |
+| `text-[0.625rem]` (10px) | admin status badges |
+| `w-[calc(100%-2rem)]` | admin delete dialog on small screens |
+| `tracking-[0.16em]` | section openers, header role label, hero eyebrow, code language label |
+| `tracking-[0.14em]` | facts ledger, skill labels, experience dates, project tags, chart labels |
 | `max-w-[62ch]` | hero summary, section intros, project summaries, experience bullets |
 | `lg:h-[4.5rem]` (72px) | header at desktop |
 | `data-[side=right]:w-[85%]` | mobile sheet width |
 | `z-[100]` | skip link |
-| `top-[0.7em]` | designed list bullet position |
+| `top-[0.7em]` | designed list bullet position, including MDX lists |
 | `before:content-['']` | designed list bullet pseudo-element |
 | `duration-[250ms]` | sheet slide |
 | `text-[0.8rem]` | small button size |
-| `text-[0.8125rem]` (13px) | mobile sheet location line |
+| `text-[0.8125rem]` (13px) | mobile sheet location line, captions, code block on mobile |
+| `text-[2rem]` (32px) | article h2 (16.1) |
+| `rounded-[2px]` | inline code radius |
+| `min-w-[40rem]` | line chart horizontal scroll |
+| `grid-cols-[3rem_1fr]` | bar chart y-axis column |
+| `text-[12px]` | line chart SVG tick and category labels |
+| `text-[11px]` | chart axis titles |
 | `rounded-[min(var(--radius-md),10px)]` | xs and icon-xs button radius |
 | `rounded-[min(var(--radius-md),12px)]` | sm and icon-sm button radius |
 | `supports-[backdrop-filter]` | header background fallback |
@@ -1379,22 +1468,26 @@ Scale-aligned arbitrary values (`leading-[1.05]`, `leading-[1.15]`, `tracking-[-
 
 ### 22.5 Phases 6 to 8 (Data, admin, blog)
 
-- [ ] Admin shell (17) separate from the public shell
-- [ ] MDX component set mapped to section 16
-- [ ] No admin imports in public pages
+- [x] Admin shell (17) separate from the public shell
+- [x] MDX component set mapped to section 16
+- [x] No admin imports in public pages
+- [x] `/blog` and `/blog/[slug]` read published rows with a date; drafts return 404
+- [x] Code, table and chart components follow 13.1, 13.2 and 13.4
+- [x] MDX guard rejects imports/exports, raw HTML, h1 and unknown components
+- [x] Admin preview is admin-only and `noindex`
 
 ### 22.6 Phase 9 (Animation)
 
-- [ ] Only the motion allowed in 6.5
-- [ ] Reduced-motion render verified for every animated element
-- [ ] No layout shift introduced
+- [x] Only the motion allowed in 6.5
+- [x] Reduced-motion render verified for every animated element
+- [x] No layout shift introduced
 
 ### 22.7 Phase 10 (Launch)
 
-- [ ] Metadata, sitemap, robots, social image
-- [ ] Lighthouse targets met (19.2)
+- [x] Metadata, sitemap, robots, social image
+- [ ] Lighthouse targets met (19.2) - manual Chrome run on the deployed URL; not run yet
 - [ ] Every nav link resolves, no TODO text left, no placeholder content
-- [ ] Phone number and email absent from the repository and pages
+- [x] Phone number and email absent from the repository and pages
 
 ---
 
@@ -1444,5 +1537,8 @@ and report the changed files and a plain-words description of the result.
 | 2.2 | 2026-11-24 | Synced the type scale, section padding, grid and ledger breakpoints, tag spacing and home structure to the built home page; added `--primary-hover`; logged the Phase 2.5 items in section 21 |
 | 2.3 | 2026-11-24 | Header revision: availability line, Contact primary action, hover underline, richer mobile sheet with identity header and footer; Contact moved from the nav row to the action |
 | 2.4 | 2026-11-24 | Home hero action group (§8.5): one wrapped row with primary + outline + ruled tertiary, Button scale rebuilt (xs 28 / sm 36 / default 44 / lg 48) and duplicate focus ring removed |
+| 2.5 | 2026-11-25 | Phase 8: blog index and article pages, MDX pipeline and guard, DataTable/BarChart/LineChart, SQL/Python code blocks, admin preview, sample draft; dark chart-4 synced to #A78BFA |
+| 2.6 | 2026-11-25 | Phase 9: shared Motion reveal, home GSAP ScrollTrigger rows, inner-page reveals, reading progress, chart draw-in, reduced-motion and no-JS rules; 404 landmark fixed |
+| 2.7 | 2026-11-25 | Phase 10: site URL and metadata helper, canonicals, OG/Twitter images, sitemap/robots, Person JSON-LD, favicon, theme-color sync, public-only analytics, conditional resume CTA, route focus, launch runbook; Lighthouse not run |
 
 End of file.
