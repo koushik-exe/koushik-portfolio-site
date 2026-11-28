@@ -1,7 +1,8 @@
+import { BentoBoard } from "@/components/home/bento-board";
 import { ClosingCta } from "@/components/home/closing-cta";
 import { ExperienceSnapshot } from "@/components/home/experience-snapshot";
 import { FeaturedProjects } from "@/components/home/featured-projects";
-import { HomeHero } from "@/components/home/home-hero";
+import { IdentityCard } from "@/components/home/identity-card";
 import { SkillsOverview } from "@/components/home/skills-overview";
 import { createPageMetadata, createPersonJsonLd } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site-url";
@@ -26,7 +27,9 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: personJsonLd }}
       />
-      <HomeHero />
+      <BentoBoard>
+        <IdentityCard />
+      </BentoBoard>
       <FeaturedProjects />
       <SkillsOverview />
       <ExperienceSnapshot />

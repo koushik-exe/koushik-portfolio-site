@@ -83,7 +83,7 @@ Each element is one session. Run the gate before reporting, then stop.
   `rounded-2xl` spreading; LCP inside a bordered box.
 - Gate: every string traces to a PROFILE line; no hex, `shadow-*` or `ring-*`; one `h1`;
   tsc, lint and build pass; board complete with JavaScript off; identity span is 12.
-- Status: todo
+- Status: done 2026-11-28
 
 ### E7 - Button usage
 
@@ -287,4 +287,5 @@ For every element:
 | Date | Element | Result |
 |---|---|---|
 | 2026-11-28 | Docs (11.2-11.6) | `DESIGN.md` 2.8, this plan, `docs/TODO.md` and `docs/STATUS.md` updated. No source change. |
-| 2026-11-28 | E1-E10 | todo |
+| 2026-11-28 | E1 | Built `src/lib/identity.ts`, `bento-card.tsx`, `bento-board.tsx`, `identity-card.tsx`; `page.tsx` composes the board; `home-hero.tsx` deleted. Identity spans 12. tsc, lint, 87 tests and build pass. |
+| 2026-11-28 | E7-E10 | todo |

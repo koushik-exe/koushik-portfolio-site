@@ -1,6 +1,6 @@
 # Status
 
-Updated 2026-11-28, after the Phase 11 docs rebuild.
+Updated 2026-11-28, after E1 (bento board and identity card).
 
 ## Shipped
 
@@ -17,10 +17,10 @@ Updated 2026-11-28, after the Phase 11 docs rebuild.
 
 ## In progress
 
-- Phase 11, home page bento / data-room direction: docs only. `DESIGN.md` 2.8 adds section 25
-  and states the 1.3 / 5.3 card exception in words; `docs/DESIGN-PLAN.md` holds E1-E10;
-  `docs/TODO.md` holds the checklist. No source file changed yet.
-- The home page still uses the Phase 2/9 layout. The h1 stays 48/60/72 until E1 lands 40/48/56.
+- Phase 11, home page bento / data-room direction: E1 built. `/` renders `BentoBoard` with
+  `IdentityCard` only (spans 12), using the local hairline `BentoCard`; the home h1 is
+  40/48/56; `home-hero.tsx` is deleted. Remaining: E7, E2, E3, E4, E5, E6, E8, E9, E10.
+- The rest of `/` still uses the Phase 2/9 sections until E2-E10 land.
 - Build order: E1, E7, E2, E3, E4, E5, E6, E8, E9, E10. One element per session, then stop.
 
 ## Verification
@@ -31,6 +31,7 @@ Updated 2026-11-28, after the Phase 11 docs rebuild.
 - Lighthouse: not run; manual Chrome run on the deployed URL is in `docs/LAUNCH.md`.
 - Not browser-tested locally: live contact send, manual theme toggle, keyboard route focus.
 - Phase 11 docs: `npx tsc --noEmit` passes and `git status` shows no `src/` change.
+- Phase 11 E1: tsc, lint, 87 tests and build pass; the board is complete with JavaScript off.
 
 ## Vercel setup
 
@@ -48,7 +49,7 @@ Set `DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED` (direct), `AUTH_SECRET`, `A
 
 - Security headers/CSP, PWA manifest, Speed Insights.
 - Real content beyond the sample draft and `PROFILE.md` facts.
-- Phase 11 bento board and cards (E1-E10).
+- Phase 11 cards E2-E10: terminal, record, project pair, toolkit, contact.
 
 ## Rule
 

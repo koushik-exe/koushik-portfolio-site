@@ -24,7 +24,7 @@ Docs first, then one element per session. Do not commit. One item at a time; run
 
 ## Step 3 - Build (one element per session, after "approved")
 
-- [ ] 11.7 E1 bento board, `BentoCard`, `src/lib/identity.ts`, identity card (span 12 only)
+- [x] 11.7 E1 bento board, `BentoCard`, `src/lib/identity.ts`, identity card (span 12 only)
 - [ ] 11.8 E7 button usage: default, secondary, ghost; secondary border via className
 - [ ] 11.9 E2 terminal card (span 5); board becomes 7 + 5
 - [ ] 11.10 E3 record card (span 5); identity spans two rows
