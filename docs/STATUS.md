@@ -1,6 +1,6 @@
 # Status
 
-Updated 2026-11-25, after Phase 10 (SEO and launch).
+Updated 2026-11-28, after the Phase 11 docs rebuild.
 
 ## Shipped
 
@@ -15,6 +15,14 @@ Updated 2026-11-25, after Phase 10 (SEO and launch).
 - Phase 9: Motion `Reveal` islands, home GSAP ScrollTrigger rows, reading progress, 400ms chart draw-in; reduced motion and no-JS keep the final state.
 - Phase 10: `metadataBase` + canonicals + 120-160 character descriptions, OG/Twitter cards, `sitemap.ts`, `robots.ts`, Person JSON-LD, `icon.svg`, theme-color sync, public-only Vercel Analytics, conditional resume CTA, route-change focus, and `docs/LAUNCH.md`.
 
+## In progress
+
+- Phase 11, home page bento / data-room direction: docs only. `DESIGN.md` 2.8 adds section 25
+  and states the 1.3 / 5.3 card exception in words; `docs/DESIGN-PLAN.md` holds E1-E10;
+  `docs/TODO.md` holds the checklist. No source file changed yet.
+- The home page still uses the Phase 2/9 layout. The h1 stays 48/60/72 until E1 lands 40/48/56.
+- Build order: E1, E7, E2, E3, E4, E5, E6, E8, E9, E10. One element per session, then stop.
+
 ## Verification
 
 - `npx tsc --noEmit`, `npm run lint`, `npm test` (87 tests) and `npm run build`: pass.
@@ -22,6 +30,7 @@ Updated 2026-11-25, after Phase 10 (SEO and launch).
 - Draft published temporarily for testing, then reverted: `published=false`, `publishedAt=null`.
 - Lighthouse: not run; manual Chrome run on the deployed URL is in `docs/LAUNCH.md`.
 - Not browser-tested locally: live contact send, manual theme toggle, keyboard route focus.
+- Phase 11 docs: `npx tsc --noEmit` passes and `git status` shows no `src/` change.
 
 ## Vercel setup
 
@@ -39,6 +48,7 @@ Set `DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED` (direct), `AUTH_SECRET`, `A
 
 - Security headers/CSP, PWA manifest, Speed Insights.
 - Real content beyond the sample draft and `PROFILE.md` facts.
+- Phase 11 bento board and cards (E1-E10).
 
 ## Rule
 

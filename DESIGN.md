@@ -5,8 +5,8 @@ ask which one is right before changing either. Change a value here and in
 `src/app/globals.css` together. Never introduce a one-off color, font, radius, spacing or
 motion value inside a component.
 
-Version: 2.7
-Status: Phases 1 to 10 built. Lighthouse is a manual launch check.
+Version: 2.8
+Status: Phase 11 planned. Docs rebuilt, no code started. Lighthouse is a manual launch check.
 Owner: Koushik C. Edit this file by hand in VS Code and save it as UTF-8.
 
 ---
@@ -101,7 +101,10 @@ Do not use any of the following anywhere on the site:
 - Dark patterns, fake urgency, fake scarcity
 - Invented metrics, invented testimonials, invented clients
 
-The single exception to the glassmorphism ban is the sticky header, defined in section 12.1.
+Two exceptions are sanctioned. The sticky header may use a backdrop blur (section 12.1). The
+home page may use a bento board of cards (section 25), but those cards carry no shadow, no
+ring, no gradient and no fill beyond `--card`; they are separated by 1px `--border` hairlines
+and space. Nothing else on the site may look like a card grid.
 
 ### 1.4 Design principles
 
@@ -340,7 +343,7 @@ Never use more than three families. Do not add a fourth for one special case.
 
 | Style | Desktop | Mobile | Weight | Line height | Tracking | Family |
 |---|---|---|---|---|---|---|
-| Display (home h1) | 72px | 48px | 600 | 1.05 | -0.02em | serif |
+| Display (home h1) | 56px | 40px | 600 | 1.05 | -0.02em | serif |
 | Page title (inner pages) | 48px | 36px | 600 | 1.1 | -0.02em | serif |
 | h2 | 36px | 30px | 600 | 1.15 | -0.015em | serif |
 | h3 | 30px | 24px | 600 | 1.3 | 0 | serif |
@@ -354,7 +357,7 @@ Never use more than three families. Do not add a fourth for one special case.
 | Code inline | 0.9em | 0.9em | 400 | inherit | 0 | mono |
 | Code block | 14px | 13px | 400 | 1.6 | 0 | mono |
 
-Home page steps: h1 is 48px, then 60px at `sm`, then 72px at `lg`; h2 is 30px then 36px
+Home page steps: h1 is 40px, then 48px at `md`, then 56px at `xl`; h2 is 30px then 36px
 at `sm`; h3 is 24px then 30px at `sm`, except the experience snapshot h3 which stays 24px.
 The hero role line is 20px then 24px at `sm`. Body small is used for section intros,
 project summaries, skill values and experience body copy; the hero summary uses Body.
@@ -480,12 +483,13 @@ runaway stretching.
 
 | Property | Rule |
 |---|---|
-| Radius | 6px (`--radius`). Small controls 4 to 6px, cards 6px, overlays 6px |
+| Radius | 6px (`--radius`). Small controls 4 to 6px, cards 6px, overlays 6px. The home bento card uses `rounded-2xl`, which resolves to 10.8px; section 25.2, recorded in 21.1 |
 | Pills | Not allowed, except nothing on this site currently needs one |
 | Fully round buttons | Not allowed |
 | Borders | 1px hairline, `--border` |
 | Input borders | 1px, `--input` |
 | Shadows | Overlays only (sheet, menu). Never on cards, buttons or the header |
+| Home bento card | `--card` fill, 1px `--border`, `rounded-2xl`, no shadow, no ring | Home page only, section 25 |
 | Rule weight | 1px everywhere. No 2px dividers |
 
 ### 5.4 Margin spine
@@ -513,6 +517,9 @@ The page composition for long pages:
 - The home hero closes with a three-cell ledger: Based in, Open to relocate, Languages.
 - Cells are divided by hairlines and share equal width from `sm`.
 - Below `sm`, the cells stack, each a mono label over a value.
+- Phase 11 retires this band on `/`. The location and relocation facts move into the identity
+  card (section 25.4); languages move to the toolkit card (section 25.8). The pattern stays
+  documented but is used on no page.
 
 ### 5.7 Contents index (home only)
 
@@ -522,6 +529,8 @@ The page composition for long pages:
 - One column in the hero's right margin from `lg`.
 - It is one component. If it feels like clutter on review, remove it. Do not add it to any
   other page.
+- Phase 11 retires the contents index on `/`. The terminal card (section 25.6) occupies the
+  hero's right column. The pattern is used on no page.
 
 ### 5.8 Alignment rules
 
@@ -535,7 +544,7 @@ The page composition for long pages:
 
 | Template | Pages | Structure |
 |---|---|---|
-| Home | `/` | cover band, three numbered content sections (01 Selected work, 02 Toolkit, 03 Experience), and a numbered closing contact section (04 Contact) |
+| Home | `/` | bento board: identity (7, two rows), terminal (5), record (5), then FileFlow and n8n (6 each), toolkit (12) and contact (12); see section 25 |
 | Inner | `/about`, `/experience` | page header, sections on the spine |
 | Index | `/projects`, `/blog` | page header, filter bar, ruled list |
 | Detail | `/projects/[slug]`, `/blog/[slug]` | page header, meta row, article body, related |
@@ -581,7 +590,8 @@ setting turned on before any animation phase is accepted.
 
 - Reveal on scroll: opacity from 0 to 1 and a rise of 8 to 16px, 300 to 400ms, once per
   viewport entry.
-- Stagger of at most 60ms between siblings, at most six siblings.
+- Stagger of at most 60ms between siblings, at most six siblings, and at most three on the
+  home page (section 25.11).
 - A reading progress bar on article pages, 2px high, using `--link`.
 - A number count-up for metrics, only if the number is real and shown in full without
   animation when reduced motion is set.
@@ -593,14 +603,20 @@ Phase 9 implementation:
 - `src/components/motion/reveal.tsx` supplies `Reveal` and `RevealGroup`: 12px rise, 300ms,
   60ms stagger and at most six siblings. Only blocks that start below the fold are armed, so
   the first paint, no-JS and reduced-motion views are complete.
-- Home Selected work rows use GSAP ScrollTrigger in `selected-work-motion.tsx`, dynamically
+- Home Selected work rows used GSAP ScrollTrigger in `selected-work-motion.tsx`, dynamically
   imported on the home page only. `gsap.matchMedia` reverts under reduced motion; there is no
-  pinning or scroll-jacking.
+  pinning or scroll-jacking. Phase 11 removes this import (see below).
 - The reading progress bar is 2px `--link` on public article pages only. Under reduced motion
   the spring is bypassed and the bar follows the scroll position directly.
 - Charts use one clip reveal per chart, 400ms: bars upward, lines left-to-right. The clip is
   applied only after mount and only when the chart starts below the fold; the server HTML,
   no-JS and reduced-motion views show the complete chart.
+
+Phase 11 implementation:
+
+- The home page uses `Reveal` only. `SelectedWorkMotion` and the home GSAP import are removed.
+- Below 640px the reveal is 8px and 250ms; at 640px and up it stays 12px and 300ms. The
+  stagger is capped at three siblings. The reduced-motion and no-JS paths are unchanged.
 
 ### 6.6 Never allowed
 
@@ -1129,6 +1145,8 @@ Used on `/contact` in Phase 5 and in the admin area in Phase 7.
 - Each row follows the home page row: index number and tool tags in the margin, title and
   summary in the content column, an arrow action at the far right. The whole row is a link.
 - Rows are ordered by relevance to analyst roles, not by date.
+- On the home page only, featured projects are single-anchor bento cards (section 25.5), not
+  rows. This index keeps the ruled rows. The two patterns never appear on the same page.
 
 ### 15.2 Project detail
 
@@ -1297,12 +1315,13 @@ development. A TODO must never ship.
 
 - Fonts: limit weights and subsets, `display: swap`, self-hosted by `next/font`.
 - Images: `next/image`, correct sizes, modern formats, lazy-load below the fold.
-- Client components only where interaction or animation needs them. Phase 9 keeps motion in
-  five small islands: `Reveal`, `SelectedWorkMotion`, `ReadingProgress`, `BarDrawIn` and
-  `LineDrawIn`. Phase 10 adds `RouteFocus` and `ThemeColorSync` (both render nothing) plus
-  Vercel Analytics, which is mounted on the public layout only.
+- Client components only where interaction or animation needs them. Phase 11 keeps motion in
+  four small islands: `Reveal`, `ReadingProgress`, `BarDrawIn` and `LineDrawIn`. Phase 10 adds
+  `RouteFocus` and `ThemeColorSync` (both render nothing) plus Vercel Analytics, which is
+  mounted on the public layout only.
 - Load GSAP and ScrollTrigger only on pages that use them, and dynamically if possible. Phase 9
-  has one GSAP import, `selected-work-motion.tsx`, loaded on the home page only.
+  had one GSAP import, `selected-work-motion.tsx`, on the home page. Phase 11 removes it, so
+  `/` ships no GSAP.
 - Do not ship unused shadcn components or unused icons.
 - Social images are generated at build time, so the font asset is read once at module scope and
   never ships to the browser.
@@ -1353,7 +1372,14 @@ item by syncing the code and the file, then delete the row.
 | Status tokens | added 2026-11-24 | `--success` / `--warning` in `globals.css` (primitives) plus `--color-success` / `--color-warning` in `@theme`; added in Phase 5. Measured vs background: success 5.12 light / 12.87 dark, warning 4.71 light / 12.26 dark - all pass |
 | Resume PDF in repository | blocked | Ignored and untracked; a Git-based deploy will not include it. Needs a hosting decision |
 | Contents index below `lg` | decided | Hidden under 1024px, section 5.7 updated |
-| Home project rows | decided | Static rows until Phase 4 adds `/projects/[slug]`; the section footer links to GitHub |
+| Home project cards | decided 2026-11-28 | Featured projects render as single-anchor bento cards (25.5) linking to the case study; the Projects index keeps ruled rows (15.1) |
+| Phase 11 - bento exception | decided 2026-11-28 | Cards use `--card`, 1px `--border`, `rounded-2xl`, no shadow, no ring, no gradient; the only card grid on the site and only on `/` (25.1, 25.2) |
+| Phase 11 - home h1 | decided 2026-11-28 | 40/48/56px replaces 48/60/72; inner page titles unchanged (3.2) |
+| Phase 11 - home secondary button | decided 2026-11-28 | `border border-muted-foreground` added through className on `/`; the global Button variants are unchanged (25.9) |
+| Phase 11 - cover band and contents index | decided 2026-11-28 | Both retired on `/`; location and relocation move into the identity card, languages into the toolkit card (5.6, 5.7, 25.4, 25.8) |
+| Phase 11 - toolkit chips | decided 2026-11-28 | 28px mono chips with a 1px border, no fill, non-interactive; the one exception to 7.4 (25.8) |
+| Phase 11 - home motion | decided 2026-11-28 | `Reveal` only, 8px/250ms below 640px and 12px/300ms above, three-sibling stagger; GSAP removed from `/` (25.11) |
+| Phase 11 - no chart | decided 2026-11-28 | PROFILE numbers do not form a series; no chart, no count-up, no hard-coded project count (25.13) |
 | Phase 4 — `/projects` | new | Page header (7.1), then filter bar (7.8), then ruled rows (15.1) with index, tool tags and arrow action. Filter bar renders only when 6+ projects; the count label reads `N projects`; all rows are in the HTML and hidden client-side on filter; no animation |
 | Phase 4 — `/projects/[slug]` | new | Breadcrumb (9.6), meta row (Type, Tools, Status, Links), sections in 15.2 order; null sections omitted except Result |
 | Phase 4 — project data | decided | `src/lib/projects.ts` owns data and copy; fields can be `null` until filled; results read "No measured result yet." until real |
@@ -1429,6 +1455,9 @@ Scale-aligned arbitrary values (`leading-[1.05]`, `leading-[1.15]`, `tracking-[-
 | `rounded-[min(var(--radius-md),10px)]` | xs and icon-xs button radius |
 | `rounded-[min(var(--radius-md),12px)]` | sm and icon-sm button radius |
 | `supports-[backdrop-filter]` | header background fallback |
+| `text-[2.5rem]` (40px) | home h1 below `md` |
+| `text-[3.5rem]` (56px) | home h1 at `xl` |
+| `rounded-2xl` (10.8px) | home bento card, section 25.2 |
 
 ---
 
@@ -1489,6 +1518,16 @@ Scale-aligned arbitrary values (`leading-[1.05]`, `leading-[1.15]`, `tracking-[-
 - [ ] Every nav link resolves, no TODO text left, no placeholder content
 - [x] Phone number and email absent from the repository and pages
 
+### 22.8 Phase 11 (Home bento)
+
+- [ ] Section 25 added and 1.3, 3.2, 5.3, 5.6, 5.7, 5.9, 6.5, 15.1, 19.3, 21 and 21.1 updated
+- [ ] No shadow, ring, gradient or hard-coded hex in any home card
+- [ ] Rows total 12 at 1280px; no orphan card at any step
+- [ ] Terminal output, chips and project steps trace to PROFILE lines
+- [ ] No GSAP on `/`; reduced motion and no-JS show the final state
+- [ ] No email, mailto or phone number in the home tree
+- [ ] 375, 768, 1280 and 320 described in words; both themes checked
+
 ---
 
 ## 23. Prompt snippets for the agent
@@ -1540,5 +1579,148 @@ and report the changed files and a plain-words description of the result.
 | 2.5 | 2026-11-25 | Phase 8: blog index and article pages, MDX pipeline and guard, DataTable/BarChart/LineChart, SQL/Python code blocks, admin preview, sample draft; dark chart-4 synced to #A78BFA |
 | 2.6 | 2026-11-25 | Phase 9: shared Motion reveal, home GSAP ScrollTrigger rows, inner-page reveals, reading progress, chart draw-in, reduced-motion and no-JS rules; 404 landmark fixed |
 | 2.7 | 2026-11-25 | Phase 10: site URL and metadata helper, canonicals, OG/Twitter images, sitemap/robots, Person JSON-LD, favicon, theme-color sync, public-only analytics, conditional resume CTA, route focus, launch runbook; Lighthouse not run |
+| 2.8 | 2026-11-28 | Phase 11: home bento / data-room direction (section 25), home h1 40/48/56, hairline card primitive, single-anchor project cards, terminal, record, toolkit chips, contact card, GSAP removed from home; 1.3, 5.3, 5.6, 5.7, 5.9, 6.5, 15.1, 19.3, 21 and 21.1 updated |
+
+---
+
+## 25. Home page, bento / data-room direction
+
+The home page is the only page with a bento board. Inner pages keep sections 5.4, 5.9 and 7.
+The board carries facts in cards. It is not a dashboard, not a landing-page mosaic and not a
+place for invented data.
+
+### 25.1 Why this does not break 1.3 or 5.3
+
+Section 1.3 bans card grids with drop shadows; section 5.3 bans shadows on cards. The board
+satisfies both by removing elevation entirely. Cards have no shadow, no ring, no gradient and
+no fill beyond `--card`. They are separated by a 1px `--border` hairline and 16px to 24px of
+space. Separation comes from the rule and the gap, not from a raised surface. This is the only
+sanctioned card pattern on the site and it exists on `/` only. If a card needs emphasis, use a
+mono label or a rule, never a shadow.
+
+### 25.2 Card primitive
+
+`BentoCard` in `src/components/home/bento-card.tsx`.
+
+- Surface: `bg-card`, 1px `border-border`, `rounded-2xl`.
+- No `shadow-*`, no `ring-*`, no gradient, no opacity trick, no hard-coded hex.
+- Padding 20px at 375, 24px at 768, 28px at 1280 (`p-5 md:p-6 xl:p-7`).
+- One level of nesting only: a card may hold rows, lists, a figure and chips. A card never
+  holds another card.
+- The card is a `div`. When the whole card is a link it is an `a` with one accessible name and
+  one focus ring. A linked card never contains another link or button.
+- `rounded-2xl` resolves to 10.8px at `--radius` 6px. This is the only second radius allowed.
+- Cards stretch to their grid row. No fixed pixel heights.
+
+### 25.3 Board grid
+
+- One column below 768px, two columns from 768px, twelve columns from 1280px.
+- Spans allowed: 3, 4, 5, 6, 7, 12. No other span.
+- At 768px a span of 6 fills one of the two columns; spans of 5, 7 and 12 fill both. Only the
+  project pair sits side by side at 768px.
+- Hero board at 1280px: identity span 7 across two rows, terminal span 5 in row 1, record span
+  5 in row 2. Project row: FileFlow 6, n8n 6. Toolkit 12. Contact 12.
+- While only the identity card exists it spans 12. A row must total 12. Never leave an orphan
+  card alone in a row.
+- Gap 16px at 375, 24px at 1280.
+
+### 25.4 Identity card
+
+- Eyebrow: mono label `Junior Analyst at ObjectWays` (PROFILE line 10).
+- `h1`: the name (line 8), at the home size in 3.2.
+- Entry-level line near the top: `entry-level Data / Business / MIS Analyst`, derived from
+  line 12.
+- Two summary sentences quoted exactly from lines 19–22.
+- Facts row: Based in (line 11) and Open to relocate (line 11). Languages are not shown here;
+  they belong to the toolkit card (25.8).
+- Actions: View projects (default), Contact (secondary), resume (tertiary link, only when
+  `RESUME_URL` is set).
+
+### 25.5 Project cards
+
+One card per featured project, one anchor to `/projects/<slug>`. The `aria-label` names the
+project and says it opens the case study. Cards render only for rows returned by
+`getFeaturedProjects()`, so a card never links to a 404.
+
+- FileFlow, only these phrases from lines 53–56: organizes files by type and date; detects
+  duplicates using SHA-256 hashing; EXIF metadata reading for images; two-phase
+  organize-and-verify workflow; error handling; automated log and report generation.
+- n8n, the five stage names only, from lines 60–61: search parameter generation; job parsing;
+  deduplication; AI match scoring; Google Sheets logging.
+
+No metrics, no results, no client language, no chart.
+
+### 25.6 Terminal card
+
+- A `figure` with an `sr-only` `figcaption`.
+- Three commands only: `whoami`, `current`, `target`. The `$` glyph is `aria-hidden`.
+- Output is PROFILE text only: `whoami` gives the name and title (lines 8–9), `current` gives
+  line 10, `target` gives line 12.
+- No typing animation, no blinking cursor, no ASCII art, no fake errors, no invented commands.
+- Long output wraps. The figure never scrolls horizontally and is not focusable.
+
+### 25.7 Record card
+
+Experience, education and certification in one card, capped at 2 roles, 2 degrees and 1
+certification (lines 36–50, 69–71, 74–75). Dates in mono tabular numbers with en dashes. One
+line per entry; the full text stays on `/experience`. One quiet link to `/experience`.
+
+### 25.8 Toolkit card and chips
+
+- Groups on the home page: Databases and querying, Programming, Data and spreadsheets,
+  Analytics and automation, Languages (lines 27–30, 33). Tools and Soft skills stay off home.
+- Chip: name only, mono 11px to 12px, 28px high, 1px `--border`, transparent fill,
+  `rounded-md`, 10px horizontal padding, wrapping. Chips are never interactive.
+- Qualifiers allowed verbatim, only these three: `Excel advanced` (line 29),
+  `English professional working` (line 33), `Tamil native` (line 33). Nothing outside
+  `PROFILE.md`.
+- This is the one exception to 7.4. No fill, no pill shape, no icon.
+
+### 25.9 Buttons on the home page
+
+- Default is the only primary. Secondary is the second action in a group. Ghost is a quiet
+  action. At most one primary per section; the header action is chrome and does not count.
+- The home secondary adds `border border-muted-foreground` through `className`. The global
+  `Button` variants are not changed.
+- The resume stays the tertiary text link of 8.5, not a ghost Button.
+- 44px height, 150ms hover, 2px ring with 2px offset, no scale.
+
+### 25.10 Shape accents
+
+CSS or inline SVG only, drawn with `currentColor` or tokens (`--border`, `--link`,
+`--muted-foreground`). No blobs, no gradient fills, no images, no filters, no glow. 1px
+strokes, at most one bolder accent per section, chosen at build time. `aria-hidden`, outside
+the text measure, removed below `sm` if it crowds. Decoration never carries meaning.
+
+### 25.11 Motion
+
+Only the existing Motion `Reveal` and `RevealGroup`. 12px and 300ms from 640px up; 8px and
+250ms below 640px. At most three siblings staggered, 60ms apart. No GSAP on `/`, no
+scroll-jacking, no parallax, no typing, no looping. The server HTML is complete before
+hydration. Reduced motion arms nothing and renders the final state.
+
+### 25.12 Contact card
+
+One card at the end of the board. A primary button to `/contact`, and the GitHub and LinkedIn
+links from line 14 with `ArrowUpRight`, `rel="noopener noreferrer"` and 44px targets. Never
+render an email address or a `mailto:` link. No phone number. The card may state location and
+relocation (line 11) and the target roles (line 12).
+
+### 25.13 What the home page must not contain
+
+- A chart or a fake dashboard. PROFILE numbers are single values, not a series: 30 to 100+
+  calls a day (line 46), CGPA 7.64 (line 70), 69.6% (line 71).
+- A hard-coded project count. Derive it from the rendered cards or omit it.
+- A count-up animation.
+- Testimonials, logos, client names or invented metrics.
+- More than one primary action per section.
+
+### 25.14 Content sources
+
+Copy comes from `PROFILE.md` lines 7–16, 18–24, 26–33, 35–50, 52–66 and 68–75.
+`src/lib/identity.ts` holds only home copy that is not already in `site.ts` or `profile.ts`; it
+imports the rest rather than duplicating it.
+
+---
 
 End of file.
