@@ -28,3 +28,52 @@ export const identityFacts = [
     value: "Chennai, Bengaluru, Coimbatore",
   },
 ] as const;
+
+type TerminalOutput = {
+  text: string;
+  /** Quieter line under a stronger one. Never used to hide content. */
+  muted?: boolean;
+};
+
+type TerminalLine = {
+  command: string;
+  output: readonly TerminalOutput[];
+};
+
+/**
+ * Verbatim from PROFILE.md line 10, en dash included. Stored as one string
+ * because the line is a single sentence there; recomposing it from
+ * `profile.ts` would paraphrase it.
+ */
+export const terminalCurrent =
+  "Junior Analyst, ObjectWays, Karur (Aug 2026 – Present, on-site)";
+
+/** Verbatim from PROFILE.md line 12, list prefix dropped. */
+export const terminalTarget =
+  "entry-level Data Analyst, Business Analyst, MIS Analyst";
+
+/** Derived: describes the figure's structure and claims nothing. */
+export const terminalCaption =
+  "Terminal showing the name and title, the current role and the target roles.";
+
+/**
+ * The only three commands allowed on the home page (DESIGN.md 25.6). The
+ * command words are UI labels; every output line is PROFILE text.
+ */
+export const terminalLines: readonly TerminalLine[] = [
+  {
+    command: "whoami",
+    output: [
+      { text: siteConfig.name },
+      { text: siteConfig.title, muted: true },
+    ],
+  },
+  {
+    command: "current",
+    output: [{ text: terminalCurrent }],
+  },
+  {
+    command: "target",
+    output: [{ text: terminalTarget }],
+  },
+];

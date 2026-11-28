@@ -111,7 +111,7 @@ Each element is one session. Run the gate before reporting, then stop.
 - Risks: reading as costume; output drifting from PROFILE; `$` announced; `pre` overflow.
 - Gate: each output matches a PROFILE line; `$` is `aria-hidden`; figcaption present; no
   typing or blink code; no overflow; text is selectable.
-- Status: todo
+- Status: done 2026-11-28
 
 ### E3 - Record card
 
@@ -216,7 +216,7 @@ Each element is one session. Run the gate before reporting, then stop.
 | Step | Cards and spans at 1280px | Row total |
 |---|---|---|
 | E1 | identity 12 | 12 |
-| E2 | identity 7 (two rows) + terminal 5 | 12 |
+| E2 | identity 7 + terminal 5 (single row until E3) | 12 |
 | E3 | identity 7 (two rows) + terminal 5 + record 5 | 12 and 12 |
 | E4 | previous + FileFlow 6 | 12 and 12 and 6 |
 | E5 | previous + n8n 6 | 12, 12, 12 |
@@ -226,6 +226,12 @@ Each element is one session. Run the gate before reporting, then stop.
 
 At 768px a span of 6 fills one of the two columns; 5, 7 and 12 fill both. At 375px every card
 is full width. No step leaves an orphan card.
+
+E2 keeps the hero board in a single row of the 12-column grid (identity 7, terminal 5). The
+identity card takes `xl:row-span-2` in the same edit that adds the record card (E3), so a second
+row never exists while only one card would sit in it. Until then both cards stretch, so the
+board's bottom edge stays straight and the terminal's spare height reads as empty scrollback,
+not a missing card.
 
 ## 6. Content inventory
 
@@ -288,4 +294,5 @@ For every element:
 |---|---|---|
 | 2026-11-28 | Docs (11.2-11.6) | `DESIGN.md` 2.8, this plan, `docs/TODO.md` and `docs/STATUS.md` updated. No source change. |
 | 2026-11-28 | E1 | Built `src/lib/identity.ts`, `bento-card.tsx`, `bento-board.tsx`, `identity-card.tsx`; `page.tsx` composes the board; `home-hero.tsx` deleted. Identity spans 12. tsc, lint, 87 tests and build pass. |
+| 2026-11-28 | E2 | Built `src/components/home/terminal-card.tsx` and the `terminalLines` copy in `src/lib/identity.ts`; identity spans 7 at `xl`, terminal spans 5; `row-span-2` deferred to E3. Three commands only, `$` `aria-hidden`, `sr-only` figcaption, no typing, no cursor, no horizontal scroll. `current` and `target` match PROFILE lines 10 and 12 byte-for-byte (en dash U+2013). tsc, lint, 87 tests and build pass. |
 | 2026-11-28 | E7-E10 | todo |

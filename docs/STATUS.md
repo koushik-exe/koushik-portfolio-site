@@ -1,6 +1,6 @@
 # Status
 
-Updated 2026-11-28, after E1 (bento board and identity card).
+Updated 2026-11-28, after E2 (terminal card).
 
 ## Shipped
 
@@ -17,10 +17,12 @@ Updated 2026-11-28, after E1 (bento board and identity card).
 
 ## In progress
 
-- Phase 11, home page bento / data-room direction: E1 built. `/` renders `BentoBoard` with
-  `IdentityCard` only (spans 12), using the local hairline `BentoCard`; the home h1 is
-  40/48/56; `home-hero.tsx` is deleted. Remaining: E7, E2, E3, E4, E5, E6, E8, E9, E10.
-- The rest of `/` still uses the Phase 2/9 sections until E2-E10 land.
+- Phase 11, home page bento / data-room direction: E1 and E2 built. `/` renders `BentoBoard`
+  with `IdentityCard` (span 7 at `xl`) and `TerminalCard` (span 5), using the local hairline
+  `BentoCard`; the home h1 is 40/48/56; `home-hero.tsx` is deleted. The identity card takes
+  `xl:row-span-2` with E3, so the hero board stays a single 12-column row for now.
+  Remaining: E7, E3, E4, E5, E6, E8, E9, E10.
+- The rest of `/` still uses the Phase 2/9 sections until E3-E10 land.
 - Build order: E1, E7, E2, E3, E4, E5, E6, E8, E9, E10. One element per session, then stop.
 
 ## Verification
@@ -32,6 +34,9 @@ Updated 2026-11-28, after E1 (bento board and identity card).
 - Not browser-tested locally: live contact send, manual theme toggle, keyboard route focus.
 - Phase 11 docs: `npx tsc --noEmit` passes and `git status` shows no `src/` change.
 - Phase 11 E1: tsc, lint, 87 tests and build pass; the board is complete with JavaScript off.
+- Phase 11 E2: tsc, lint, 87 tests and build pass. Terminal output matches PROFILE lines 8-10
+  and 12; `current` is byte-identical to line 10 including the en dash; no mojibake in the
+  changed files; the card is static with JavaScript off and adds no tab stop.
 
 ## Vercel setup
 
@@ -49,7 +54,7 @@ Set `DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED` (direct), `AUTH_SECRET`, `A
 
 - Security headers/CSP, PWA manifest, Speed Insights.
 - Real content beyond the sample draft and `PROFILE.md` facts.
-- Phase 11 cards E2-E10: terminal, record, project pair, toolkit, contact.
+- Phase 11 cards E3-E10: record, project pair, toolkit, contact.
 
 ## Rule
 

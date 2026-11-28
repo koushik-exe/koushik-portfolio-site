@@ -3,6 +3,7 @@ import { ClosingCta } from "@/components/home/closing-cta";
 import { ExperienceSnapshot } from "@/components/home/experience-snapshot";
 import { FeaturedProjects } from "@/components/home/featured-projects";
 import { IdentityCard } from "@/components/home/identity-card";
+import { TerminalCard } from "@/components/home/terminal-card";
 import { SkillsOverview } from "@/components/home/skills-overview";
 import { createPageMetadata, createPersonJsonLd } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site-url";
@@ -29,6 +30,7 @@ export default function Home() {
       />
       <BentoBoard>
         <IdentityCard />
+        <TerminalCard />
       </BentoBoard>
       <FeaturedProjects />
       <SkillsOverview />

@@ -20,7 +20,7 @@ export function IdentityCard() {
   const resume = getResumeLink();
 
   return (
-    <BentoCard className="md:col-span-2 xl:col-span-12">
+    <BentoCard className="md:col-span-2 xl:col-span-7">
       <p className="flex items-center gap-3 font-mono text-[0.6875rem] tracking-[0.16em] text-muted-foreground uppercase">
         <span aria-hidden="true" className="h-px w-8 bg-border" />
         {identityEyebrow}
